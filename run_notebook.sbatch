@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=nb
+#SBATCH -A TALMI-SL3-CPU
+#SBATCH -p icelake-himem
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --time=04:00:00
 #SBATCH --mem=16G
 #SBATCH --cpus-per-task=4
 
 set -euo pipefail
-
-# --- Customize these for your cluster ---
-# module load python/3.12
-# module load cuda/12  # uncomment for GPU jobs
 
 # ── Resolve notebook path ────────────────────────────────────────────
 # Two modes:
@@ -40,19 +40,28 @@ NOTEBOOK_NAME="$(basename "$NOTEBOOK")"
 # ── Environment ──────────────────────────────────────────────────────
 cd "$NOTEBOOK_DIR" || exit 1
 
+ENV_SCRIPT="$HOME/workspace/cluster_env.sh"
+if [ ! -f "$ENV_SCRIPT" ]; then
+    echo "Error: missing environment script: $ENV_SCRIPT"
+    exit 1
+fi
+
+source "$ENV_SCRIPT"
+
 # Prevent matplotlib from trying to open display windows
 export MPLBACKEND=Agg
 
-# JAX: default to CPU; uncomment the gpu line and comment the cpu line for GPU
-export JAX_PLATFORM_NAME=cpu
-# export JAX_PLATFORM_NAME=gpu
+# Match thread-aware libraries to the Slurm CPU request.
+export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
+export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
+export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 
-# Optional: limit JAX memory preallocation (useful on shared nodes)
-# export XLA_PYTHON_CLIENT_MEM_FRACTION=0.5
+# JAX: run on CPU by default for current CSD3 notebook jobs.
+export JAX_PLATFORM_NAME=cpu
 
 # ── Execute ──────────────────────────────────────────────────────────
 echo "$(date): Starting $NOTEBOOK"
-uv run jupyter execute "$NOTEBOOK_NAME"
+jupyter execute "$NOTEBOOK_NAME"
 STATUS=$?
 echo "$(date): Finished $NOTEBOOK (exit code $STATUS)"
 exit $STATUS

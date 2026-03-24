@@ -1,13 +1,23 @@
-# Slurm Notebook Runner
+# CSD3 Notebook Runner
 
-This repository submits already-prepared notebooks to Slurm and executes one notebook per task.
-It does not prepare notebooks or manage project-specific render workflows.
+This repository submits already-prepared notebooks to Slurm on CSD3 and executes
+one notebook per task. It does not prepare notebooks or manage project-specific
+render workflows.
 
-## What It Expects
+## Current Contract
 
-- A directory containing executable `.ipynb` notebooks
-- Slurm available on the system
-- `uv` and `jupyter` available in the execution environment
+- input: a directory containing executable `.ipynb` notebooks
+- scheduler: Slurm on CSD3
+- account: `TALMI-SL3-CPU`
+- default partition: `icelake-himem`
+- execution environment: `~/workspace/cluster_env.sh`
+- execution command: `jupyter execute`
+
+The batch script currently targets CPU notebook jobs with:
+
+- `4` CPUs
+- `16G` memory
+- `04:00:00` walltime
 
 ## Usage
 
@@ -32,24 +42,22 @@ Each submission creates a run directory under `runs/` containing:
 ## Files
 
 - `submit_notebooks.sh`: scans a notebook directory, writes a manifest, and submits one Slurm array job
-- `run_notebook.sbatch`: executes one notebook from the manifest with `uv run jupyter execute`
+- `run_notebook.sbatch`: executes one notebook from the manifest or a direct path on CSD3
+- `notes/guide.md`: first-time cluster setup and smoke-test notes
 - `notes/`: older planning and reference notes kept out of the tool surface
 
 ## Scope
 
-This repo is intentionally narrow.
-Notebook preparation, `papermill` workflows, and project-specific `render_*` notebook design belong upstream in the project that produced the notebooks.
+This repo is intentionally narrow. Notebook preparation, `papermill`
+workflows, and project-specific `render_*` notebook design belong upstream in
+the project that produced the notebooks.
 
-## Customization
+## Notes
 
-Default Slurm resources live in `run_notebook.sbatch`.
-Adjust the `#SBATCH` header there to match your cluster.
-
-# Setup Firsts:
-
-One-time setup
-
-install uv
-create ~/workspace
-clone jaxcmr and repfr
-create the shared venv
+- The batch script assumes `~/workspace/cluster_env.sh` exists and activates the
+  shared notebook environment.
+- `TALMI-SL3-CPU` is an SL3 account, so CPU jobs are subject to the SL3
+  walltime rules. On CSD3, that means a practical 12-hour ceiling for a single
+  job.
+- For first validation runs, prefer small prepared analysis notebooks such as
+  `crp_*.ipynb`, `spc_*.ipynb`, or `pnr_*.ipynb`.

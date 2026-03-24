@@ -9,6 +9,7 @@ The goal is to end with:
 - a shared Python environment outside any single repo
 - `jaxcmr` importable from that environment
 - one rendered notebook runnable by hand before using Slurm
+- the CSD3 account and Slurm defaults needed by this repo
 
 ## One-Time Setup
 
@@ -62,7 +63,22 @@ git clone <repfr_repo_url>
 git clone <sbatch_repo_url>
 ```
 
-7. Create one shared virtual environment outside the repos.
+7. Discover your CSD3 Slurm account.
+
+```bash
+mybalance
+```
+
+For the current setup, the relevant CPU account is:
+
+```text
+TALMI-SL3-CPU
+```
+
+The tracked `sbatch` scripts now assume that account and use the
+`icelake-himem` partition by default.
+
+8. Create one shared virtual environment outside the repos.
 
 ```bash
 mkdir -p "$HOME/workspace/.venvs"
@@ -70,7 +86,7 @@ uv venv "$HOME/workspace/.venvs/jaxcmr-cluster" --python 3.12
 source "$HOME/workspace/.venvs/jaxcmr-cluster/bin/activate"
 ```
 
-8. Install `jaxcmr` and the notebook/runtime dependencies into that shared
+9. Install `jaxcmr` and the notebook/runtime dependencies into that shared
 environment.
 
 ```bash
@@ -85,6 +101,8 @@ Notes:
 - `repfr` does not currently need to be installed as a package for this setup.
 - The shared environment lives outside the repos so it can later serve multiple
   projects.
+- `TALMI-SL3-CPU` is an SL3 account. On CSD3, SL3 CPU jobs cannot run longer
+  than 12 hours, so treat very long fitting notebooks as follow-up work.
 
 ## Reusable Environment Script
 
@@ -141,10 +159,8 @@ If that works, the main execution prerequisites are in place:
 Once the manual notebook run works, make the Slurm runner use the same
 environment.
 
-In `sbatch/run_notebook.sbatch`, source `~/workspace/cluster_env.sh` before the
-final notebook execution command.
-
-For a first pass, the execute section should look like this:
+The tracked `sbatch/run_notebook.sbatch` file now does this directly. The
+relevant execute section looks like this:
 
 ```bash
 source "$HOME/workspace/cluster_env.sh"
@@ -195,6 +211,7 @@ If this works, you have shown that:
 - Slurm can launch the job
 - the job can activate the shared environment
 - the job can execute one prepared notebook on a compute node
+- the hardcoded CSD3 account and partition are valid for this workflow
 
 ## First Batch Submission
 
@@ -220,6 +237,11 @@ cd "$HOME/workspace/sbatch"
 
 Still avoid `fitting_*.ipynb` at this stage. The goal of the first batch is to
 prove that the runner and environment work, not to launch long model-fitting
+jobs.
+
+The current runner targets midweight notebook jobs on `icelake-himem`
+(`4` CPUs, `16G`, `04:00:00`). That is a reasonable starting point for analysis
+notebooks, but it does not solve the SL3 12-hour limit for very long fitting
 jobs.
 
 After submission:
