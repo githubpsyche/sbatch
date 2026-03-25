@@ -134,19 +134,14 @@ python -c "import jaxcmr; print(jaxcmr.__file__)"
 
 ```bash
 source "$HOME/workspace/cluster_env.sh"
-cd "$HOME/workspace/repfr/code/rendered"
-jupyter execute crp_LohnasKahana2014_list_type_1234.ipynb
+cd "$HOME/workspace/repfr/analyses/rendered"
+jupyter execute fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb
 ```
 
-For this first check, choose a small prepared analysis notebook, not a fitting
-notebook. Good first candidates usually have prefixes like:
-
-- `crp_`
-- `spc_`
-- `pnr_`
-
-Avoid `fitting_*.ipynb` for the first manual run. Those notebooks can take much
-longer and may depend on pre-existing fit or simulation artifacts.
+For this first check, pick one per-subject fitting notebook. These are
+self-contained: they load data, fit one subject, simulate, and optionally
+generate figures. A single-subject fit with `best_of=3` typically takes
+under a minute.
 
 If that works, the main execution prerequisites are in place:
 
@@ -186,7 +181,7 @@ sbatch \
   --output "$HOME/workspace/sbatch/runs/smoke_%j.out" \
   --error "$HOME/workspace/sbatch/runs/smoke_%j.err" \
   run_notebook.sbatch \
-  "$HOME/workspace/repfr/code/rendered/crp_LohnasKahana2014_list_type_1234.ipynb"
+  "$HOME/workspace/repfr/analyses/rendered/fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb"
 ```
 
 Then:
@@ -222,7 +217,7 @@ For a first batch, keep it very small. Start with one notebook or a narrow glob.
 ```bash
 cd "$HOME/workspace/sbatch"
 ./submit_notebooks.sh \
-  "$HOME/workspace/repfr/code/rendered" \
+  "$HOME/workspace/repfr/analyses/rendered" \
   "crp_*.ipynb"
 ```
 
@@ -231,18 +226,13 @@ Or, if you want a slightly larger first test:
 ```bash
 cd "$HOME/workspace/sbatch"
 ./submit_notebooks.sh \
-  "$HOME/workspace/repfr/code/rendered" \
+  "$HOME/workspace/repfr/analyses/rendered" \
   "spc_*.ipynb"
 ```
 
-Still avoid `fitting_*.ipynb` at this stage. The goal of the first batch is to
-prove that the runner and environment work, not to launch long model-fitting
-jobs.
-
-The current runner targets midweight notebook jobs on `icelake-himem`
-(`4` CPUs, `16G`, `04:00:00`). That is a reasonable starting point for analysis
-notebooks, but it does not solve the SL3 12-hour limit for very long fitting
-jobs.
+The runner targets lightweight per-subject fitting jobs on `icelake-himem`
+(`1` CPU, `4G`, `04:00:00`). Submissions larger than 1000 notebooks are
+automatically split into multiple array jobs.
 
 After submission:
 

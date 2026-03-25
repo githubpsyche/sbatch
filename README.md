@@ -15,9 +15,16 @@ render workflows.
 
 The batch script currently targets CPU notebook jobs with:
 
-- `4` CPUs
-- `16G` memory
+- `1` CPU
+- `4G` memory
 - `04:00:00` walltime
+
+### CSD3 SL3 constraints
+
+- Maximum walltime: **12 hours**
+- Maximum concurrent CPUs per user: **448** on icelake
+- With 1 CPU per job and the default throttle of 100, submissions use at most
+  100 CPUs concurrently.
 
 ## Usage
 
@@ -33,15 +40,31 @@ Submit only notebooks matching a glob:
 ./submit_notebooks.sh /path/to/notebooks "fitting_*.ipynb"
 ```
 
+Override the concurrent task throttle (default 100):
+
+```bash
+./submit_notebooks.sh /path/to/notebooks "fitting_*.ipynb" 200
+```
+
+### Large submissions
+
+Manifests larger than 1000 notebooks are automatically split into multiple
+array jobs (one per chunk). Each chunk gets its own manifest file in the run
+directory. All chunks share the same log directory. This avoids hitting
+Slurm's `MaxArraySize` limit (default 1001).
+
+### Run directory
+
 Each submission creates a run directory under `runs/` containing:
 
-- `manifest.txt`: the notebook list for that submission
-- `submission.txt`: the `sbatch` submission output
+- `manifest.txt`: the full notebook list for that submission
+- `manifest_N.txt`: per-chunk manifests (only for large submissions)
+- `submission.txt`: the `sbatch` submission output(s)
 - `logs/`: Slurm stdout/stderr logs
 
 ## Files
 
-- `submit_notebooks.sh`: scans a notebook directory, writes a manifest, and submits one Slurm array job
+- `submit_notebooks.sh`: scans a notebook directory, writes a manifest, and submits one or more Slurm array jobs
 - `run_notebook.sbatch`: executes one notebook from the manifest or a direct path on CSD3
 - `notes/guide.md`: first-time cluster setup and smoke-test notes
 - `notes/`: older planning and reference notes kept out of the tool surface
@@ -59,5 +82,3 @@ the project that produced the notebooks.
 - `TALMI-SL3-CPU` is an SL3 account, so CPU jobs are subject to the SL3
   walltime rules. On CSD3, that means a practical 12-hour ceiling for a single
   job.
-- For first validation runs, prefer small prepared analysis notebooks such as
-  `crp_*.ipynb`, `spc_*.ipynb`, or `pnr_*.ipynb`.
