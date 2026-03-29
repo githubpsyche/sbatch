@@ -34,11 +34,20 @@ if [ ! -f "$NOTEBOOK" ]; then
     exit 1
 fi
 
-NOTEBOOK_DIR="$(cd "$(dirname "$NOTEBOOK")" && pwd)"
-NOTEBOOK_NAME="$(basename "$NOTEBOOK")"
+NOTEBOOK="$(cd "$(dirname "$NOTEBOOK")" && pwd)/$(basename "$NOTEBOOK")"
+
+# ── Find project root (nearest .git ancestor of the notebook) ────────
+PROJECT_DIR="$(dirname "$NOTEBOOK")"
+while [ "$PROJECT_DIR" != "/" ] && [ ! -d "$PROJECT_DIR/.git" ]; do
+    PROJECT_DIR="$(dirname "$PROJECT_DIR")"
+done
+if [ ! -d "$PROJECT_DIR/.git" ]; then
+    echo "Error: could not find project root for $NOTEBOOK"
+    exit 1
+fi
 
 # ── Environment ──────────────────────────────────────────────────────
-cd "$NOTEBOOK_DIR" || exit 1
+cd "$PROJECT_DIR" || exit 1
 
 ENV_SCRIPT="$HOME/workspace/cluster_env.sh"
 if [ ! -f "$ENV_SCRIPT" ]; then
@@ -59,9 +68,12 @@ export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 # JAX: run on CPU by default for current CSD3 notebook jobs.
 export JAX_PLATFORM_NAME=cpu
 
+# Prevent uv from detecting pyproject.toml and creating project-local venvs.
+export UV_NO_PROJECT=1
+
 # ── Execute ──────────────────────────────────────────────────────────
 echo "$(date): Starting $NOTEBOOK"
-jupyter execute "$NOTEBOOK_NAME"
+papermill "$NOTEBOOK" "$NOTEBOOK" --progress-bar
 STATUS=$?
 echo "$(date): Finished $NOTEBOOK (exit code $STATUS)"
 exit $STATUS
