@@ -57,9 +57,6 @@ fi
 
 source "$ENV_SCRIPT"
 
-# Prevent matplotlib from trying to open display windows
-export MPLBACKEND=Agg
-
 # Match thread-aware libraries to the Slurm CPU request.
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"

@@ -38,20 +38,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 source "$HOME/.local/bin/env"
 ```
 
-5. Add that line to your shell startup file so future logins also see `uv`.
-
-For `bash`:
+5. Add that line to `.bashrc` so future sessions see it.
 
 ```bash
 echo 'source "$HOME/.local/bin/env"' >> "$HOME/.bashrc"
 source "$HOME/.bashrc"
-```
-
-For `zsh`:
-
-```bash
-echo 'source "$HOME/.local/bin/env"' >> "$HOME/.zshrc"
-source "$HOME/.zshrc"
 ```
 
 6. Clone the repos you need into `~/workspace`.
@@ -81,25 +72,30 @@ The tracked `sbatch` scripts now assume that account and use the
 8. Create one shared virtual environment outside the repos.
 
 ```bash
-mkdir -p "$HOME/workspace/.venvs"
-uv venv "$HOME/workspace/.venvs/jaxcmr-cluster" --python 3.12
-source "$HOME/workspace/.venvs/jaxcmr-cluster/bin/activate"
+uv venv "$HOME/workspace/.venv" --python 3.12
+source "$HOME/workspace/.venv/bin/activate"
 ```
 
-9. Install `jaxcmr` and the notebook/runtime dependencies into that shared
-environment.
+9. Install packages into the shared environment.
 
 ```bash
-cd "$HOME/workspace/jaxcmr"
-uv pip install -e '.[dev]'
-uv pip install jupyter nbclient pandas
+cd "$HOME/workspace"
+uv pip install -e "jaxcmr[dev]"
+uv pip install jupyter nbclient pandas papermill
+```
+
+Run from `~/workspace/` (not from inside a project directory) to avoid
+uv's project-mode detection creating unwanted project-local venvs.
+
+Install any project packages that need to be importable (e.g. `lpp_ecmr`):
+
+```bash
+uv pip install -e lpp_ecmr
 ```
 
 Notes:
 
-- `jaxcmr` is the installable package here.
-- `repfr` does not currently need to be installed as a package for this setup.
-- The shared environment lives outside the repos so it can later serve multiple
+- The shared environment lives outside the repos so it can serve multiple
   projects.
 - `TALMI-SL3-CPU` is an SL3 account. On CSD3, SL3 CPU jobs cannot run longer
   than 12 hours, so treat very long fitting notebooks as follow-up work.
@@ -112,7 +108,7 @@ Slurm jobs.
 ```bash
 cat > "$HOME/workspace/cluster_env.sh" <<'EOF'
 source "$HOME/.local/bin/env"
-source "$HOME/workspace/.venvs/jaxcmr-cluster/bin/activate"
+source "$HOME/workspace/.venv/bin/activate"
 EOF
 
 chmod +x "$HOME/workspace/cluster_env.sh"
@@ -135,7 +131,9 @@ python -c "import jaxcmr; print(jaxcmr.__file__)"
 ```bash
 source "$HOME/workspace/cluster_env.sh"
 cd "$HOME/workspace/repfr/analyses/rendered"
-jupyter execute fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb
+papermill fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb \
+  fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb \
+  --progress-bar
 ```
 
 For this first check, pick one per-subject fitting notebook. These are
@@ -154,20 +152,10 @@ If that works, the main execution prerequisites are in place:
 Once the manual notebook run works, make the Slurm runner use the same
 environment.
 
-The tracked `sbatch/run_notebook.sbatch` file now does this directly. The
-relevant execute section looks like this:
-
-```bash
-source "$HOME/workspace/cluster_env.sh"
-
-echo "$(date): Starting $NOTEBOOK"
-jupyter execute "$NOTEBOOK_NAME"
-STATUS=$?
-echo "$(date): Finished $NOTEBOOK (exit code $STATUS)"
-exit $STATUS
-```
-
-That turns the manual environment setup into the Slurm job setup.
+The tracked `sbatch/run_notebook.sbatch` file now does this directly. It
+sources `cluster_env.sh`, sets `UV_NO_PROJECT=1` to prevent uv from
+creating project-local venvs, and runs the notebook via papermill (which
+writes cell outputs back to the file as each cell completes).
 
 ## First Slurm Smoke Test
 
