@@ -93,9 +93,16 @@ if [ "$COUNT" -le "$CHUNK_SIZE" ]; then
     printf '%s\n' "$SBATCH_OUTPUT" > "$RUN_DIR/submission.txt"
     printf '%s\n' "$SBATCH_OUTPUT"
 
-    # Submit sentinel job that emails when the array finishes
-    if [ "${#END_MAIL_FLAGS[@]}" -gt 0 ]; then
-        ARRAY_JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
+    # Submit sentinel job after the array finishes
+    ARRAY_JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
+    if [ -n "${SBATCH_SENTINEL:-}" ]; then
+        sbatch --dependency=afterok:"$ARRAY_JOBID" \
+            --job-name=post-fit \
+            --output "$LOG_DIR/sentinel_%j.out" \
+            --error "$LOG_DIR/sentinel_%j.err" \
+            "${END_MAIL_FLAGS[@]}" \
+            "$SBATCH_SENTINEL" "$PROJECT_DIR"
+    elif [ "${#END_MAIL_FLAGS[@]}" -gt 0 ]; then
         sbatch --dependency=afterany:"$ARRAY_JOBID" \
             --job-name=done \
             --output "$LOG_DIR/sentinel_%j.out" \
@@ -136,8 +143,15 @@ else
     done
     echo "Submitted $CHUNK_INDEX chunks"
 
-    # Submit sentinel job that emails when all chunks finish
-    if [ "${#END_MAIL_FLAGS[@]}" -gt 0 ] && [ -n "$ALL_JOBIDS" ]; then
+    # Submit sentinel job after all chunks finish
+    if [ -n "${SBATCH_SENTINEL:-}" ] && [ -n "$ALL_JOBIDS" ]; then
+        sbatch --dependency="$(echo "$ALL_JOBIDS" | sed 's/afterany/afterok/g')" \
+            --job-name=post-fit \
+            --output "$LOG_DIR/sentinel_%j.out" \
+            --error "$LOG_DIR/sentinel_%j.err" \
+            "${END_MAIL_FLAGS[@]}" \
+            "$SBATCH_SENTINEL" "$PROJECT_DIR"
+    elif [ "${#END_MAIL_FLAGS[@]}" -gt 0 ] && [ -n "$ALL_JOBIDS" ]; then
         sbatch --dependency="$ALL_JOBIDS" \
             --job-name=done \
             --output "$LOG_DIR/sentinel_%j.out" \
