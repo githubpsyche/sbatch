@@ -218,10 +218,11 @@ After submission:
 Check progress with:
 
 ```bash
-~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>
+~/workspace/sbatch/check_run.sh                              # newest run in current project
+~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>  # specific run
 ```
 
-This shows the status and full notebook path for each task. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
+This shows the Slurm job ID and task counts by state. Use `-v` for per-task detail with notebook paths. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
 
 At that point, the repo is working end-to-end:
 
