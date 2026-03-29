@@ -4,7 +4,7 @@
 #SBATCH -p icelake-himem
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=04:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=4G
 #SBATCH --cpus-per-task=1
 
