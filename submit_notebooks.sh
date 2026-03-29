@@ -32,9 +32,20 @@ if [ ! -d "$NOTEBOOK_DIR_INPUT" ]; then
 fi
 
 NOTEBOOK_DIR="$(cd "$NOTEBOOK_DIR_INPUT" && pwd)"
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SBATCH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Find project root (nearest .git ancestor of the notebook directory)
+PROJECT_DIR="$NOTEBOOK_DIR"
+while [ "$PROJECT_DIR" != "/" ] && [ ! -d "$PROJECT_DIR/.git" ]; do
+    PROJECT_DIR="$(dirname "$PROJECT_DIR")"
+done
+if [ ! -d "$PROJECT_DIR/.git" ]; then
+    echo "Error: could not find project root for $NOTEBOOK_DIR"
+    exit 1
+fi
+
 RUN_ID="$(date +%Y%m%d-%H%M%S)-$$"
-RUN_DIR="$REPO_ROOT/runs/$RUN_ID"
+RUN_DIR="$PROJECT_DIR/runs/$RUN_ID"
 LOG_DIR="$RUN_DIR/logs"
 MANIFEST="$RUN_DIR/manifest.txt"
 
@@ -53,6 +64,16 @@ if [ "$COUNT" -eq 0 ]; then
     exit 1
 fi
 
+# Optional email notifications (set SBATCH_MAIL_USER in your shell config).
+# Array tasks get FAIL-only emails. A sentinel job fires one END email
+# after the entire array completes.
+FAIL_MAIL_FLAGS=()
+END_MAIL_FLAGS=()
+if [ -n "${SBATCH_MAIL_USER:-}" ]; then
+    FAIL_MAIL_FLAGS=(--mail-type=FAIL --mail-user="$SBATCH_MAIL_USER")
+    END_MAIL_FLAGS=(--mail-type=END --mail-user="$SBATCH_MAIL_USER")
+fi
+
 echo "Submitting $COUNT notebooks from $NOTEBOOK_DIR"
 echo "Run directory: $RUN_DIR"
 head -5 "$MANIFEST"
@@ -66,13 +87,25 @@ if [ "$COUNT" -le "$CHUNK_SIZE" ]; then
             --output "$LOG_DIR/%x_%A_%a.out" \
             --error "$LOG_DIR/%x_%A_%a.err" \
             --export=ALL,MANIFEST="$MANIFEST" \
-            "$REPO_ROOT/run_notebook.sbatch"
+            "${FAIL_MAIL_FLAGS[@]}" \
+            "$SBATCH_DIR/run_notebook.sbatch"
     )"
     printf '%s\n' "$SBATCH_OUTPUT" > "$RUN_DIR/submission.txt"
     printf '%s\n' "$SBATCH_OUTPUT"
+
+    # Submit sentinel job that emails when the array finishes
+    if [ "${#END_MAIL_FLAGS[@]}" -gt 0 ]; then
+        ARRAY_JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
+        sbatch --dependency=afterany:"$ARRAY_JOBID" \
+            --job-name=done \
+            --output "$LOG_DIR/sentinel_%j.out" \
+            "${END_MAIL_FLAGS[@]}" \
+            --wrap="echo 'All $COUNT notebooks finished (array $ARRAY_JOBID).'"
+    fi
 else
     CHUNK_INDEX=0
     OFFSET=0
+    ALL_JOBIDS=""
     while [ "$OFFSET" -lt "$COUNT" ]; do
         REMAINING=$((COUNT - OFFSET))
         THIS_CHUNK=$CHUNK_SIZE
@@ -89,13 +122,26 @@ else
                 --output "$LOG_DIR/%x_%A_%a.out" \
                 --error "$LOG_DIR/%x_%A_%a.err" \
                 --export=ALL,MANIFEST="$CHUNK_MANIFEST" \
-                "$REPO_ROOT/run_notebook.sbatch"
+                "${FAIL_MAIL_FLAGS[@]}" \
+                "$SBATCH_DIR/run_notebook.sbatch"
         )"
         printf '%s\n' "$SBATCH_OUTPUT" >> "$RUN_DIR/submission.txt"
         printf '%s\n' "$SBATCH_OUTPUT"
+
+        JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
+        ALL_JOBIDS="${ALL_JOBIDS:+$ALL_JOBIDS:}afterany:$JOBID"
 
         OFFSET=$((OFFSET + THIS_CHUNK))
         CHUNK_INDEX=$((CHUNK_INDEX + 1))
     done
     echo "Submitted $CHUNK_INDEX chunks"
+
+    # Submit sentinel job that emails when all chunks finish
+    if [ "${#END_MAIL_FLAGS[@]}" -gt 0 ] && [ -n "$ALL_JOBIDS" ]; then
+        sbatch --dependency="$ALL_JOBIDS" \
+            --job-name=done \
+            --output "$LOG_DIR/sentinel_%j.out" \
+            "${END_MAIL_FLAGS[@]}" \
+            --wrap="echo 'All $COUNT notebooks finished ($CHUNK_INDEX chunks).'"
+    fi
 fi

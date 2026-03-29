@@ -162,12 +162,12 @@ writes cell outputs back to the file as each cell completes).
 Before trying a batch, submit one notebook as one Slurm job.
 
 ```bash
-mkdir -p "$HOME/workspace/sbatch/runs"
+mkdir -p "$HOME/workspace/repfr/runs"
 cd "$HOME/workspace/sbatch"
 
 sbatch \
-  --output "$HOME/workspace/sbatch/runs/smoke_%j.out" \
-  --error "$HOME/workspace/sbatch/runs/smoke_%j.err" \
+  --output "$HOME/workspace/repfr/runs/smoke_%j.out" \
+  --error "$HOME/workspace/repfr/runs/smoke_%j.err" \
   run_notebook.sbatch \
   "$HOME/workspace/repfr/analyses/rendered/fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb"
 ```
@@ -184,9 +184,9 @@ squeue -u "$USER"
 3. After it finishes, inspect the logs:
 
 ```bash
-ls "$HOME/workspace/sbatch/runs"
-cat "$HOME/workspace/sbatch/runs/smoke_<jobid>.out"
-cat "$HOME/workspace/sbatch/runs/smoke_<jobid>.err"
+ls "$HOME/workspace/repfr/runs"
+cat "$HOME/workspace/repfr/runs/smoke_<jobid>.out"
+cat "$HOME/workspace/repfr/runs/smoke_<jobid>.err"
 ```
 
 If this works, you have shown that:
@@ -224,14 +224,29 @@ automatically split into multiple array jobs.
 
 After submission:
 
-1. Find the newest run directory under `sbatch/runs/`.
-2. Open `manifest.txt` to confirm the intended notebooks were selected.
-3. Open `submission.txt` to get the Slurm job ID.
-4. Inspect `logs/` after the tasks run.
+Check progress with:
+
+```bash
+~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>
+```
+
+This shows the status and full notebook path for each task. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
 
 At that point, the repo is working end-to-end:
 
 - notebooks already exist
 - the runner can submit them to Slurm
 - one notebook runs per task
-- logs are written under `sbatch/runs/`
+- logs are written under the project's `runs/` directory
+
+## Email Notifications
+
+To get emailed when jobs finish or fail, set `SBATCH_MAIL_USER` in your `~/.bashrc`:
+
+```bash
+export SBATCH_MAIL_USER="your_email@example.com"
+```
+
+`submit_notebooks.sh` picks this up automatically. If unset, no emails are sent.
+
+You get one email when the entire batch finishes, plus immediate emails for any individual task failures.
