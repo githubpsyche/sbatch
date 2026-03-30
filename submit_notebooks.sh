@@ -6,16 +6,31 @@ CHUNK_SIZE=1000
 DEFAULT_THROTTLE=100
 
 usage() {
-    echo "Usage: ./submit_notebooks.sh <notebook_dir> [glob] [throttle]"
+    echo "Usage: ./submit_notebooks.sh [--sentinel <script>] <notebook_dir> [glob] [throttle]"
     echo
     echo "Examples:"
     echo "  ./submit_notebooks.sh /path/to/notebooks"
     echo "  ./submit_notebooks.sh /path/to/notebooks \"fitting_*.ipynb\""
     echo "  ./submit_notebooks.sh /path/to/notebooks \"fitting_*.ipynb\" 200"
+    echo "  ./submit_notebooks.sh --sentinel /path/to/post_fit.sh /path/to/notebooks \"fitting_*.ipynb\""
     echo
     echo "Throttle limits concurrent array tasks (default: $DEFAULT_THROTTLE)."
     echo "Manifests larger than $CHUNK_SIZE are split into multiple array jobs."
+    echo
+    echo "Options:"
+    echo "  --sentinel <script>  Run <script> after all tasks succeed (receives project dir as \$1)."
 }
+
+# Parse --sentinel flag
+SENTINEL=""
+if [ "${1:-}" = "--sentinel" ]; then
+    if [ "$#" -lt 2 ]; then
+        echo "Error: --sentinel requires a script path"
+        exit 1
+    fi
+    SENTINEL="$2"
+    shift 2
+fi
 
 if [ "$#" -lt 1 ] || [ "$#" -gt 3 ]; then
     usage
@@ -95,13 +110,13 @@ if [ "$COUNT" -le "$CHUNK_SIZE" ]; then
 
     # Submit sentinel job after the array finishes
     ARRAY_JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
-    if [ -n "${SBATCH_SENTINEL:-}" ]; then
+    if [ -n "$SENTINEL" ]; then
         sbatch --dependency=afterok:"$ARRAY_JOBID" \
             --job-name=post-fit \
             --output "$LOG_DIR/sentinel_%j.out" \
             --error "$LOG_DIR/sentinel_%j.err" \
             "${END_MAIL_FLAGS[@]}" \
-            "$SBATCH_SENTINEL" "$PROJECT_DIR"
+            "$SENTINEL" "$PROJECT_DIR"
     elif [ "${#END_MAIL_FLAGS[@]}" -gt 0 ]; then
         sbatch --dependency=afterany:"$ARRAY_JOBID" \
             --job-name=done \
@@ -144,13 +159,13 @@ else
     echo "Submitted $CHUNK_INDEX chunks"
 
     # Submit sentinel job after all chunks finish
-    if [ -n "${SBATCH_SENTINEL:-}" ] && [ -n "$ALL_JOBIDS" ]; then
+    if [ -n "$SENTINEL" ] && [ -n "$ALL_JOBIDS" ]; then
         sbatch --dependency="$(echo "$ALL_JOBIDS" | sed 's/afterany/afterok/g')" \
             --job-name=post-fit \
             --output "$LOG_DIR/sentinel_%j.out" \
             --error "$LOG_DIR/sentinel_%j.err" \
             "${END_MAIL_FLAGS[@]}" \
-            "$SBATCH_SENTINEL" "$PROJECT_DIR"
+            "$SENTINEL" "$PROJECT_DIR"
     elif [ "${#END_MAIL_FLAGS[@]}" -gt 0 ] && [ -n "$ALL_JOBIDS" ]; then
         sbatch --dependency="$ALL_JOBIDS" \
             --job-name=done \

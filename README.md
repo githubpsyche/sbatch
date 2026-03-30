@@ -218,7 +218,7 @@ After submission:
 Check progress with:
 
 ```bash
-~/workspace/sbatch/check_run.sh                              # newest run in current project
+cd ~/workspace/repfr && ~/workspace/sbatch/check_run.sh       # newest run in current project
 ~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>  # specific run
 ```
 
@@ -245,11 +245,10 @@ You get one email when the entire batch finishes, plus immediate emails for any 
 
 ## Custom Sentinel Jobs
 
-By default, a lightweight sentinel job sends the completion email after the array finishes. To run a custom script instead (e.g. a post-processing pipeline), set `SBATCH_SENTINEL`:
+By default, a lightweight sentinel job sends the completion email after the array finishes. To run a custom script instead (e.g. a post-processing pipeline), use `--sentinel`:
 
 ```bash
-SBATCH_SENTINEL=/path/to/post_process.sh \
-  ./submit_notebooks.sh /path/to/notebooks "fitting_*.ipynb"
+./submit_notebooks.sh --sentinel /path/to/post_process.sh /path/to/notebooks "fitting_*.ipynb"
 ```
 
-The sentinel script receives the project directory as its first argument and runs only if all array tasks succeed (`afterok`). If unset, the default email-only sentinel runs on `afterany`.
+The sentinel script receives the project directory as its first argument and runs only if all array tasks succeed (`afterok`). If omitted, the default email-only sentinel runs on `afterany`.
