@@ -252,3 +252,17 @@ By default, a lightweight sentinel job sends the completion email after the arra
 ```
 
 The sentinel script receives the project directory as its first argument and runs only if all array tasks succeed (`afterok`). If omitted, the default email-only sentinel runs on `afterany`.
+
+## Resubmitting Failed Tasks
+
+If some tasks fail (e.g. transient kernel deaths), resubmit just the failures:
+
+```bash
+./resubmit_failed.sh ~/workspace/project/runs/<run_id>
+```
+
+This reads the run's manifest and sacct state, copies failed notebooks to `<run_dir>/resubmit/`, and submits them. Supports `--sentinel` for chaining post-processing:
+
+```bash
+./resubmit_failed.sh --sentinel /path/to/post_process.sh ~/workspace/project/runs/<run_id>
+```
