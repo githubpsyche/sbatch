@@ -3,6 +3,7 @@
 set -euo pipefail
 
 VERBOSE=false
+CHUNK_SIZE=1000
 
 usage() {
     echo "Usage: ./check_run.sh [-v] [run_dir]"
@@ -64,22 +65,38 @@ if [ ! -f "$SUBMISSION" ]; then
 fi
 
 # Extract job ID(s) from submission.txt
-JOBID=$(grep -o '[0-9]\+' "$SUBMISSION" | head -1)
+JOBIDS=()
+while IFS= read -r jobid; do
+    JOBIDS+=("$jobid")
+done < <(grep -o '[0-9]\+' "$SUBMISSION")
 
-if [ -z "$JOBID" ]; then
-    echo "Error: could not parse job ID from $SUBMISSION"
+if [ "${#JOBIDS[@]}" -eq 0 ]; then
+    echo "Error: could not parse job IDs from $SUBMISSION"
     exit 1
 fi
+
+JOBID_LIST="$(IFS=,; echo "${JOBIDS[*]}")"
+JOB_DISPLAY="$JOBID_LIST"
 
 TOTAL=$(wc -l < "$MANIFEST")
 
 # Get task states from sacct
 declare -A TASK_STATE
+declare -A JOB_OFFSET
+for chunk_index in "${!JOBIDS[@]}"; do
+    JOB_OFFSET["${JOBIDS[$chunk_index]}"]=$((chunk_index * CHUNK_SIZE))
+done
+
 while IFS='|' read -r taskid state; do
+    [[ "$taskid" != *_* ]] && continue
+    jobid="${taskid%%_*}"
     idx="${taskid##*_}"
     [[ "$idx" == *"."* ]] && continue
+    offset="${JOB_OFFSET[$jobid]:-}"
+    [ -n "$offset" ] || continue
+    idx=$((offset + idx))
     TASK_STATE["$idx"]="$state"
-done < <(sacct -j "$JOBID" --format=JobID%-30,State%-15 --noheader --parsable2 2>/dev/null)
+done < <(sacct -j "$JOBID_LIST" --format=JobID%-30,State%-15 --noheader --parsable2 2>/dev/null)
 
 # Count by state
 declare -A STATE_COUNT
@@ -89,7 +106,7 @@ done
 
 # Summary
 echo "Run:  $RUN_DIR"
-echo "Job:  $JOBID"
+echo "Job:  $JOB_DISPLAY"
 echo -n "Tasks: $TOTAL total"
 for state in COMPLETED RUNNING PENDING FAILED; do
     count="${STATE_COUNT[$state]:-0}"
