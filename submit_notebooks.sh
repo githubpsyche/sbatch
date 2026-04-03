@@ -151,7 +151,7 @@ else
         printf '%s\n' "$SBATCH_OUTPUT"
 
         JOBID=$(echo "$SBATCH_OUTPUT" | grep -o '[0-9]\+')
-        ALL_JOBIDS="${ALL_JOBIDS:+$ALL_JOBIDS:}afterany:$JOBID"
+        ALL_JOBIDS="${ALL_JOBIDS:+$ALL_JOBIDS:}$JOBID"
 
         OFFSET=$((OFFSET + THIS_CHUNK))
         CHUNK_INDEX=$((CHUNK_INDEX + 1))
@@ -160,14 +160,14 @@ else
 
     # Submit sentinel job after all chunks finish
     if [ -n "$SENTINEL" ] && [ -n "$ALL_JOBIDS" ]; then
-        sbatch --dependency="$(echo "$ALL_JOBIDS" | sed 's/afterany/afterok/g')" \
+        sbatch --dependency="afterok:$ALL_JOBIDS" \
             --job-name=post-fit \
             --output "$LOG_DIR/sentinel_%j.out" \
             --error "$LOG_DIR/sentinel_%j.err" \
             "${END_MAIL_FLAGS[@]}" \
             "$SENTINEL" "$PROJECT_DIR"
     elif [ "${#END_MAIL_FLAGS[@]}" -gt 0 ] && [ -n "$ALL_JOBIDS" ]; then
-        sbatch --dependency="$ALL_JOBIDS" \
+        sbatch --dependency="afterany:$ALL_JOBIDS" \
             --job-name=done \
             --output "$LOG_DIR/sentinel_%j.out" \
             "${END_MAIL_FLAGS[@]}" \
