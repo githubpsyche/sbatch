@@ -125,7 +125,18 @@ if [ "$VERBOSE" = true ]; then
         [ -n "$notebook" ] || continue
         state="${TASK_STATE[$TASK_INDEX]:-UNKNOWN}"
         display_path="~${notebook#"$HOME"}"
-        printf "%-4s  %-12s  %s\n" "$TASK_INDEX" "$state" "$display_path"
+        chunk_index=$((TASK_INDEX / CHUNK_SIZE))
+        local_index=$((TASK_INDEX % CHUNK_SIZE))
+        err_path=""
+        if [ "$chunk_index" -lt "${#JOBIDS[@]}" ]; then
+            err_path="$RUN_DIR/logs/nb_${JOBIDS[$chunk_index]}_${local_index}.err"
+        fi
+        if [ -n "$err_path" ]; then
+            display_err="~${err_path#"$HOME"}"
+            printf "%-4s  %-12s  %s  %s\n" "$TASK_INDEX" "$state" "$display_path" "$display_err"
+        else
+            printf "%-4s  %-12s  %s\n" "$TASK_INDEX" "$state" "$display_path"
+        fi
         TASK_INDEX=$((TASK_INDEX + 1))
     done < "$MANIFEST"
 fi
