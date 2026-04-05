@@ -222,7 +222,17 @@ cd ~/workspace/repfr && ~/workspace/sbatch/check_run.sh       # newest run in cu
 ~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>  # specific run
 ```
 
-This shows the Slurm job ID and task counts by state. Use `-v` for per-task detail with notebook paths. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
+Here `run_id` means the name of a directory under `~/workspace/repfr/runs/`, for example `20260403-094020-3328986`. Chunking does not change that: one submission still gets one run directory, even if it spans multiple Slurm array jobs.
+
+To get the newest run path explicitly:
+
+```bash
+ls -td ~/workspace/repfr/runs/* | head -1
+```
+
+This shows the Slurm job ID and task counts by state. Use `-v` for per-task detail with notebook paths and corresponding `.err` log paths. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
+
+Generated project artifacts are typically synchronized back with `rsync`; Git remains the normal tool for source changes.
 
 At that point, the repo is working end-to-end:
 
@@ -236,7 +246,8 @@ At that point, the repo is working end-to-end:
 To get emailed when jobs finish or fail, set `SBATCH_MAIL_USER` in your `~/.bashrc`:
 
 ```bash
-export SBATCH_MAIL_USER="your_email@example.com"
+echo 'export SBATCH_MAIL_USER="your_email@example.com"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 `submit_notebooks.sh` picks this up automatically. If unset, no emails are sent.
@@ -258,10 +269,18 @@ The sentinel script receives the project directory as its first argument and run
 If some tasks fail (e.g. transient kernel deaths), resubmit just the failures:
 
 ```bash
-./resubmit_failed.sh ~/workspace/project/runs/<run_id>
+cd ~/workspace/project
+../sbatch/resubmit_failed.sh
 ```
 
-This reads the run's manifest and sacct state, copies failed notebooks to `<run_dir>/resubmit/`, and submits them. Supports `--sentinel` for chaining post-processing:
+This reads the newest run's manifest and sacct state by default, copies failed notebooks to `<run_dir>/resubmit/`, and submits them. Supports `--sentinel` for chaining post-processing:
+
+```bash
+cd ~/workspace/project
+../sbatch/resubmit_failed.sh --sentinel /path/to/post_process.sh
+```
+
+To resubmit failures from a specific run instead:
 
 ```bash
 ./resubmit_failed.sh --sentinel /path/to/post_process.sh ~/workspace/project/runs/<run_id>

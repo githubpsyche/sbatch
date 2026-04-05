@@ -4,11 +4,12 @@
 # Reads the manifest and sacct state from a run directory, copies failed
 # notebooks to <run_dir>/resubmit/, and submits them via submit_notebooks.sh.
 #
-# Usage: ./resubmit_failed.sh [--sentinel <script>] <run_dir>
+# Usage: ./resubmit_failed.sh [--sentinel <script>] [run_dir]
 
 set -euo pipefail
 
 SBATCH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CHUNK_SIZE=1000
 
 # Parse --sentinel flag
 SENTINEL_ARGS=()
@@ -21,12 +22,24 @@ if [ "${1:-}" = "--sentinel" ]; then
     shift 2
 fi
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: ./resubmit_failed.sh [--sentinel <script>] <run_dir>"
+if [ "$#" -gt 1 ]; then
+    echo "Usage: ./resubmit_failed.sh [--sentinel <script>] [run_dir]"
     exit 1
 fi
 
-RUN_DIR="$1"
+if [ "$#" -eq 0 ]; then
+    PROJECT_DIR="$(pwd)"
+    while [ "$PROJECT_DIR" != "/" ] && [ ! -d "$PROJECT_DIR/.git" ]; do
+        PROJECT_DIR="$(dirname "$PROJECT_DIR")"
+    done
+    if [ ! -d "$PROJECT_DIR/runs" ]; then
+        echo "Error: no runs/ directory found under $PROJECT_DIR"
+        exit 1
+    fi
+    RUN_DIR="$PROJECT_DIR/runs/$(ls -t "$PROJECT_DIR/runs" | head -1)"
+else
+    RUN_DIR="$1"
+fi
 
 if [ ! -d "$RUN_DIR" ]; then
     echo "Error: run directory not found: $RUN_DIR"
@@ -45,19 +58,35 @@ if [ ! -f "$SUBMISSION" ]; then
     exit 1
 fi
 
-JOBID=$(grep -o '[0-9]\+' "$SUBMISSION" | head -1)
-if [ -z "$JOBID" ]; then
-    echo "Error: could not parse job ID from $SUBMISSION"
+# Extract job ID(s) from submission.txt
+JOBIDS=()
+while IFS= read -r jobid; do
+    JOBIDS+=("$jobid")
+done < <(grep -o '[0-9]\+' "$SUBMISSION")
+
+if [ "${#JOBIDS[@]}" -eq 0 ]; then
+    echo "Error: could not parse job IDs from $SUBMISSION"
     exit 1
 fi
 
 # Get task states from sacct
 declare -A TASK_STATE
+declare -A JOB_OFFSET
+for chunk_index in "${!JOBIDS[@]}"; do
+    JOB_OFFSET["${JOBIDS[$chunk_index]}"]=$((chunk_index * CHUNK_SIZE))
+done
+
+JOBID_LIST="$(IFS=,; echo "${JOBIDS[*]}")"
 while IFS='|' read -r taskid state; do
+    [[ "$taskid" != *_* ]] && continue
+    jobid="${taskid%%_*}"
     idx="${taskid##*_}"
     [[ "$idx" == *"."* ]] && continue
+    offset="${JOB_OFFSET[$jobid]:-}"
+    [ -n "$offset" ] || continue
+    idx=$((offset + idx))
     TASK_STATE["$idx"]="$state"
-done < <(sacct -j "$JOBID" --format=JobID%-30,State%-15 --noheader --parsable2 2>/dev/null)
+done < <(sacct -j "$JOBID_LIST" --format=JobID%-30,State%-15 --noheader --parsable2 2>/dev/null)
 
 # Find failed notebooks
 FAILED_NOTEBOOKS=()
