@@ -232,6 +232,20 @@ ls -td ~/workspace/repfr/runs/* | head -1
 
 This shows the Slurm job ID and task counts by state. Use `-v` for per-task detail with notebook paths and corresponding `.err` log paths. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
 
+To list only failed tasks, including the failed notebook path and stderr path:
+
+```bash
+cd ~/workspace/project
+../sbatch/check_run.sh -v | grep FAILED
+```
+
+Inspect one failing stderr log before deciding whether the failures are transient:
+
+```bash
+../sbatch/check_run.sh -v | grep FAILED | awk '{print $4}' | head -1
+sed -n '1,200p' <stderr_path>
+```
+
 Generated project artifacts are typically synchronized back with `rsync`; Git remains the normal tool for source changes.
 
 At that point, the repo is working end-to-end:
