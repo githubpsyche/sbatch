@@ -45,6 +45,19 @@ CSD3 compute node
 You usually do not log into a compute node yourself. You submit a job from the
 login node, and Slurm starts it later on a compute node.
 
+A scheduled job moves through those places like this:
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["local machine<br/>edit, prepare, inspect"] --> B["CSD3 login node<br/>connect, submit, inspect"]
+  B --> C["Slurm scheduler"]
+  C --> D["CSD3 compute node<br/>run the job"]
+  D --> E["logs and outputs"]
+  E --> B
+  E --> A
+```
+
 ## What A Job Needs
 
 A common local pattern is to write one script that loops over every unit of
@@ -73,6 +86,29 @@ case 001," "fit subject 17," "simulate seed 42," or "process this one input
 file."
 
 Then Slurm can run many copies of the same command with different inputs.
+
+The design change is to move the outer loop out of the job:
+
+Local loop hidden inside one job:
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["one submitted job"] --> B["script with for-loop"]
+  B --> C["run unit 1"]
+  C --> D["then run unit 2"]
+  D --> E["then run unit 3"]
+```
+
+Cluster pattern visible to Slurm: separate tasks run one unit each.
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["Slurm array"] --> B["task 1<br/>run unit 1"]
+  A --> C["task 2<br/>run unit 2"]
+  A --> D["task 3<br/>run unit 3"]
+```
 
 A good cluster job needs:
 

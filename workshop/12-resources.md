@@ -50,11 +50,11 @@ logs and executed notebooks easier to monitor while jobs are still running.
 
 Use the pages in this site as the first reference for the workflow:
 
-- [Orientation](00-orientation.md)
+- [Orientation](00-orientation.qmd)
 - [Workflow Map](03-workflow-map.md)
-- [Submit The Batch](07-submit-the-batch.md)
+- [Submit The Batch](07-submit-the-batch.qmd)
 - [Monitor And Recover](08-monitor-and-recover.md)
-- [Post-Process Or Bring Results Back](10-post-process-or-bring-results-back.md)
+- [Post-Process Or Bring Results Back](10-post-process-or-bring-results-back.qmd)
 - [Project-Side Script Examples](https://github.com/githubpsyche/sbatch/tree/master/examples/project-scripts)
 
 Use the root scripts when you need exact behavior for the notebook helper:

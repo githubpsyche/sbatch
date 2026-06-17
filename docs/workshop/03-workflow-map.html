@@ -185,14 +185,23 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/08-follow-up-jobs.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Monitor And Recover</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/09-monitor-and-recover.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/10-bring-results-back.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../workshop/11-focused-reruns.html" class="sidebar-item-text sidebar-link">
@@ -297,19 +306,19 @@ Batch run: submit one task per subject.</code></pre>
 <h3 class="anchored" data-anchor-id="monitor-and-recover">6. Monitor And Recover</h3>
 <p>Where: CSD3 login node.</p>
 <p>Artifact: queue state, accounting state, logs, executed notebooks if relevant, and a decision about whether a failure is transient or structural.</p>
-<p>Next: <a href="08-monitor-and-recover.md">Monitor And Recover</a>.</p>
+<p>Next: <a href="../workshop/08-monitor-and-recover.html">Monitor And Recover</a>.</p>
 </section>
 <section id="run-follow-up-jobs-if-needed" class="level3">
 <h3 class="anchored" data-anchor-id="run-follow-up-jobs-if-needed">7. Run Follow-Up Jobs If Needed</h3>
 <p>Where: CSD3, after the first jobs finish.</p>
 <p>Artifact: merged outputs, pooled summaries, downstream reports, or any other generated files that depend on earlier jobs.</p>
-<p>Next: <a href="09-follow-up-jobs.md">Run Follow-Up Jobs</a>.</p>
+<p>Next: <a href="../workshop/09-follow-up-jobs.html">Run Follow-Up Jobs</a>.</p>
 </section>
 <section id="post-process-or-bring-results-back" class="level3">
 <h3 class="anchored" data-anchor-id="post-process-or-bring-results-back">8. Post-Process Or Bring Results Back</h3>
 <p>Where: CSD3 for compute-heavy post-processing; local machine for transfer and local inspection.</p>
 <p>Artifact: reduced outputs produced on CSD3, or generated outputs copied back without committing large or derived files to Git by accident.</p>
-<p>Next: <a href="10-post-process-or-bring-results-back.md">Post-Process Or Bring Results Back</a>.</p>
+<p>Next: <a href="../workshop/10-post-process-or-bring-results-back.html">Post-Process Or Bring Results Back</a>.</p>
 </section>
 <section id="rerun-narrowly-when-needed" class="level3">
 <h3 class="anchored" data-anchor-id="rerun-narrowly-when-needed">9. Rerun Narrowly When Needed</h3>

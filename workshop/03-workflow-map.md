@@ -37,7 +37,7 @@ Repeating unit: fit one subject.
 Batch run: submit one task per subject.
 ```
 
-Next: [Prepare Work Units](04-prepare-work-units.md).
+Next: [Prepare Work Units](04-prepare-work-units.qmd).
 
 ### 2. Prepare The Work Units
 
@@ -46,7 +46,7 @@ Where: usually local machine.
 Artifact: a script, command, notebook, manifest, glob, or parameter set that
 makes every unit in the batch explicit and runnable without interaction.
 
-Next: [Prepare Work Units](04-prepare-work-units.md).
+Next: [Prepare Work Units](04-prepare-work-units.qmd).
 
 ### 3. Transfer Files To CSD3
 
@@ -64,7 +64,7 @@ Where: CSD3 login node for submission; CSD3 compute node for execution.
 Artifact: one submitted job ID, one prepared work unit, one pair of stdout/stderr
 logs, and one output artifact to inspect.
 
-Next: [Run One Slurm Job](06-run-one-slurm-job.md).
+Next: [Run One Slurm Job](06-run-one-slurm-job.qmd).
 
 ### 5. Submit The Batch
 
@@ -73,7 +73,7 @@ Where: CSD3 login node for submission; CSD3 compute nodes for execution.
 Artifact: Slurm job IDs, run directory, manifests or submitted scripts, and logs
 for each unit.
 
-Next: [Submit The Batch](07-submit-the-batch.md).
+Next: [Submit The Batch](07-submit-the-batch.qmd).
 
 ### 6. Monitor And Recover
 
@@ -101,7 +101,7 @@ local inspection.
 Artifact: reduced outputs produced on CSD3, or generated outputs copied back
 without committing large or derived files to Git by accident.
 
-Next: [Post-Process Or Bring Results Back](10-post-process-or-bring-results-back.md).
+Next: [Post-Process Or Bring Results Back](10-post-process-or-bring-results-back.qmd).
 
 ### 9. Rerun Narrowly When Needed
 

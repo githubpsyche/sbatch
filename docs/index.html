@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -185,14 +188,23 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/08-follow-up-jobs.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Monitor And Recover</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/09-monitor-and-recover.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/10-bring-results-back.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./workshop/11-focused-reruns.html" class="sidebar-item-text sidebar-link">
@@ -224,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#core-resources" id="toc-core-resources" class="nav-link" data-scroll-target="#core-resources">Core Resources</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -236,6 +248,26 @@ ul.task-list li input[type="checkbox"] {
 <h1>Remote Cluster Computing For Research Workflows</h1>
 <p>This site is a practical guide to using CSD3 for research work that can be split into scheduled jobs.</p>
 <p>The guide is for code-savvy researchers who are comfortable with files and a terminal, but who may not yet have a working mental model for remote clusters, Git, or moving files to and from CSD3. The examples use generic project names so the pattern can be adapted to different projects.</p>
+<p>The workflow has a repeatable shape:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["prepare"] --&gt; B["transfer"]
+  B --&gt; C["run one"]
+  C --&gt; D["batch"]
+  D --&gt; E["monitor"]
+  E --&gt; F["follow-up / results"]
+  F --&gt; G["rerun narrowly"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <section id="what-this-guide-helps-you-do" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-guide-helps-you-do">What This Guide Helps You Do</h2>
 <p>This guide helps you:</p>
@@ -709,4 +741,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/index.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

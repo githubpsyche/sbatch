@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -186,20 +189,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/08-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Run Follow-Up Jobs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../workshop/09-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+  <a href="../workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Monitor And Recover</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/10-bring-results-back.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bring Results Back</span></a>
+  <a href="../workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -233,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#main-point" id="toc-main-point" class="nav-link" data-scroll-target="#main-point">Main Point</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/00-orientation.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/00-orientation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -272,6 +275,26 @@ CSD3 login node
 CSD3 compute node
   runs the scheduled job after Slurm starts it</code></pre>
 <p>You usually do not log into a compute node yourself. You submit a job from the login node, and Slurm starts it later on a compute node.</p>
+<p>A scheduled job moves through those places like this:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["local machine&lt;br/&gt;edit, prepare, inspect"] --&gt; B["CSD3 login node&lt;br/&gt;connect, submit, inspect"]
+  B --&gt; C["Slurm scheduler"]
+  C --&gt; D["CSD3 compute node&lt;br/&gt;run the job"]
+  D --&gt; E["logs and outputs"]
+  E --&gt; B
+  E --&gt; A
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="what-a-job-needs" class="level2">
 <h2 class="anchored" data-anchor-id="what-a-job-needs">What A Job Needs</h2>
@@ -284,6 +307,42 @@ CSD3 compute node
 <pre class="text"><code>run the analysis for this one input</code></pre>
 <p>For cluster work, the better pattern is usually to make one unit of work explicit. Instead of “run everything,” the job should mean something like “run case 001,” “fit subject 17,” “simulate seed 42,” or “process this one input file.”</p>
 <p>Then Slurm can run many copies of the same command with different inputs.</p>
+<p>The design change is to move the outer loop out of the job:</p>
+<p>Local loop hidden inside one job:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["one submitted job"] --&gt; B["script with for-loop"]
+  B --&gt; C["run unit 1"]
+  C --&gt; D["then run unit 2"]
+  D --&gt; E["then run unit 3"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Cluster pattern visible to Slurm: separate tasks run one unit each.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["Slurm array"] --&gt; B["task 1&lt;br/&gt;run unit 1"]
+  A --&gt; C["task 2&lt;br/&gt;run unit 2"]
+  A --&gt; D["task 3&lt;br/&gt;run unit 3"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <p>A good cluster job needs:</p>
 <ul>
 <li>a command that runs one unit of work</li>
@@ -719,4 +778,4 @@ CSD3 compute node
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/00-orientation.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/00-orientation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -102,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -221,20 +224,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/08-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Run Follow-Up Jobs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../workshop/09-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+  <a href="../workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Monitor And Recover</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/10-bring-results-back.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bring Results Back</span></a>
+  <a href="../workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -270,7 +273,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#adaptation-notes" id="toc-adaptation-notes" class="nav-link" data-scroll-target="#adaptation-notes">Adaptation Notes</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/06-run-one-slurm-job.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/06-run-one-slurm-job.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -293,6 +296,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>whatever output files the notebook writes</li>
 </ul>
 <p>The prepared notebook is the unit of work. The <code>sbatch</code> file tells Slurm how to run that unit on a compute node.</p>
+<p>One scheduled job ties together the prepared unit, job script, environment, and generated artifacts:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  A["prepared unit&lt;br/&gt;notebook, script, or input"] --&gt; C["Slurm job"]
+  B["job script&lt;br/&gt;resources + command"] --&gt; C
+  D["cluster_env.sh&lt;br/&gt;software setup"] --&gt; C
+  C --&gt; E["compute node"]
+  E --&gt; F["stdout log"]
+  E --&gt; G["stderr log"]
+  E --&gt; H["output artifact"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="what-the-notebook-runner-provides" class="level2">
 <h2 class="anchored" data-anchor-id="what-the-notebook-runner-provides">What The Notebook Runner Provides</h2>
@@ -774,4 +798,4 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/06-run-one-slurm-job.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/06-run-one-slurm-job.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

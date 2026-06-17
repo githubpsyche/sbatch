@@ -102,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -269,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#local-machine-inspect-and-summarize" id="toc-local-machine-inspect-and-summarize" class="nav-link" data-scroll-target="#local-machine-inspect-and-summarize">Local Machine: Inspect And Summarize</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/10-post-process-or-bring-results-back.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/10-post-process-or-bring-results-back.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -291,6 +294,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   -&gt; optional summary or reduction on CSD3
   -&gt; filtered results copied back with rsync
   -&gt; local inspection, figures, reports, or comparisons</code></pre>
+<p>Use the next step to decide where the work belongs:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart TD
+  A["batch outputs on CSD3"] --&gt; B{"next step is still heavy&lt;br/&gt;or reads many remote files?"}
+  B --&gt;|"yes"| C["post-process on CSD3"]
+  C --&gt; D["copy reduced outputs"]
+  B --&gt;|"no"| E["filtered rsync to local machine"]
+  D --&gt; F["local inspection or reporting"]
+  E --&gt; F
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="csd3-post-process-near-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="csd3-post-process-near-the-data">CSD3: Post-Process Near The Data</h2>
@@ -791,4 +814,4 @@ runs/</code></pre>
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/10-post-process-or-bring-results-back.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/10-post-process-or-bring-results-back.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

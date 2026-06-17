@@ -1,332 +1,68 @@
 [
   {
-    "objectID": "workshop/12-resources.html",
-    "href": "workshop/12-resources.html",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html",
+    "href": "workshop/01-tools-and-access.html",
+    "title": "Tools And Access",
     "section": "",
-    "text": "This page keeps the reference list small. The guide explains the needed Slurm ideas through local examples and CSD3 commands, so the links below are for checking official details later.\n\n\nCSD3 Quick Start is the starting point for new users. Use it to confirm account basics and the official CSD3 orientation.\nConnecting to CSD3 covers SSH access. Use it when local SSH or Remote-SSH cannot connect.\nRunning Jobs on CSD3 is the official reference for CSD3 batch jobs. Use it to check scheduler terms, partitions, and job submission behavior.\nLogin-Web Interface is the fallback path when you need browser-based shell access.\n\n\n\nRemote Explorer is the VS Code view that shows configured SSH targets.\n\n\n\nuv is the Python environment and package tool used in the setup example.\nPython venv explains the standard-library virtual environment concept behind isolated project environments.\nPython argparse tutorial is useful when turning a local script into a command that handles one unit of work at a time.\nPapermill is relevant for notebook-based workflows and the notebook helper scripts in this repo.\n\n\n\nUse the pages in this site as the first reference for the workflow:\n\nOrientation\nWorkflow Map\nSubmit The Batch\nMonitor And Recover\nBring Results Back\nProject-Side Script Examples\n\nUse the root scripts when you need exact behavior for the notebook helper:\n\nrun_notebook.sbatch\nsubmit_notebooks.sh\ncheck_run.sh\nresubmit_failed.sh\n\n\n\n\nUse these links to answer specific questions after using the guide: connection problems, CSD3 account details, batch-job behavior, VS Code remote access, Python environments, command-line arguments, or notebook execution.\nDo not turn the resource page into a broad Slurm bibliography. Keep the resource list focused on the CSD3, VS Code, and Python docs readers are most likely to need.",
+    "text": "The recommended interface in this guide is VS Code Remote-SSH. It gives you a remote file browser, editor, and terminal while still using normal SSH under the hood.\nThe same commands also work from a plain SSH terminal.\n\n\nThe tools fit into a few jobs in the workflow.\nAccess tools get you onto CSD3. VS Code Remote-SSH gives you a remote editor and terminal connected through SSH. Remote Explorer is the VS Code panel where saved SSH targets appear. Plain ssh gives you the same CSD3 shell in a normal terminal. Login-Web is the browser fallback when SSH tooling is not working.\nWhen VS Code is connected to CSD3, its integrated terminal is a CSD3 terminal, not a local Mac terminal.\nFile movement tools keep your local machine and CSD3 in sync. Git is for source code and deliberate small project changes. rsync is for generated inputs, large files, and outputs that should not be committed to Git.\nEnvironment tools make your command runnable on CSD3. Python users might use uv or Conda. Other workflows might use CSD3 modules, compiled software, R, MATLAB, or field-specific tools.\nScheduling tools send work to compute nodes. Slurm is the scheduler, and sbatch is the command that submits a job. Most of this guide is about getting from “I have code” to “I can submit many clean units of work through Slurm.”\n\n\n\nThe main example uses a Python-heavy workflow: Python environment setup, notebook execution, and helper scripts for notebook-shaped jobs.\nThe transferable part is not Python or notebooks. The transferable part is:\n\nconnect to CSD3\nput code and inputs in a predictable project folder\nmake one unit of work runnable from the command line\nsubmit that unit through Slurm\nscale it with arrays or repeated submissions\nmonitor logs and sync outputs back\n\nOther workflows can use the same shape with a different command layer:\n\nR scripts run with Rscript\nMATLAB scripts or functions submitted through Slurm\nshell scripts\ncompiled programs\nsoftware loaded through CSD3 modules\nworkflow-specific tools for your field\n\nCSD3 has specific guidance for R and Rscript, MATLAB, modules, and Python.\n\n\n\nAdd a named host on your local machine:\nHost csd3-login\n  HostName login-cpu.hpc.cam.ac.uk\n  User &lt;your-crsid-or-username&gt;\nCheck plain SSH first:\nssh csd3-login\nIf plain SSH cannot connect, fix that before debugging VS Code.\n\n\n\nIn VS Code:\n\nInstall the Remote - SSH extension.\nOpen Remote Explorer.\nChoose csd3-login.\nComplete MFA if prompted.\nOpen the remote project folder, usually under ~/workspace/.\nUse the integrated terminal for CSD3 commands.\n\nRemote Explorer is where configured SSH targets appear:\n\n\n\nVS Code Remote Explorer showing SSH targets\n\n\nCommands labeled “CSD3” in this guide run in that remote terminal.\n\n\n\nUse Login-Web when SSH or VS Code is unavailable. It gives shell access, so the CSD3 commands in this guide still apply.",
     "crumbs": [
       "Start",
-      "Resources"
+      "Tools And Access"
     ]
   },
   {
-    "objectID": "workshop/12-resources.html#csd3-ground-truth",
-    "href": "workshop/12-resources.html#csd3-ground-truth",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html#tool-roles",
+    "href": "workshop/01-tools-and-access.html#tool-roles",
+    "title": "Tools And Access",
     "section": "",
-    "text": "CSD3 Quick Start is the starting point for new users. Use it to confirm account basics and the official CSD3 orientation.\nConnecting to CSD3 covers SSH access. Use it when local SSH or Remote-SSH cannot connect.\nRunning Jobs on CSD3 is the official reference for CSD3 batch jobs. Use it to check scheduler terms, partitions, and job submission behavior.\nLogin-Web Interface is the fallback path when you need browser-based shell access.",
+    "text": "The tools fit into a few jobs in the workflow.\nAccess tools get you onto CSD3. VS Code Remote-SSH gives you a remote editor and terminal connected through SSH. Remote Explorer is the VS Code panel where saved SSH targets appear. Plain ssh gives you the same CSD3 shell in a normal terminal. Login-Web is the browser fallback when SSH tooling is not working.\nWhen VS Code is connected to CSD3, its integrated terminal is a CSD3 terminal, not a local Mac terminal.\nFile movement tools keep your local machine and CSD3 in sync. Git is for source code and deliberate small project changes. rsync is for generated inputs, large files, and outputs that should not be committed to Git.\nEnvironment tools make your command runnable on CSD3. Python users might use uv or Conda. Other workflows might use CSD3 modules, compiled software, R, MATLAB, or field-specific tools.\nScheduling tools send work to compute nodes. Slurm is the scheduler, and sbatch is the command that submits a job. Most of this guide is about getting from “I have code” to “I can submit many clean units of work through Slurm.”",
     "crumbs": [
       "Start",
-      "Resources"
+      "Tools And Access"
     ]
   },
   {
-    "objectID": "workshop/12-resources.html#vs-code-remote-work",
-    "href": "workshop/12-resources.html#vs-code-remote-work",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html#example-stack-and-other-stacks",
+    "href": "workshop/01-tools-and-access.html#example-stack-and-other-stacks",
+    "title": "Tools And Access",
     "section": "",
-    "text": "Remote Explorer is the VS Code view that shows configured SSH targets.",
+    "text": "The main example uses a Python-heavy workflow: Python environment setup, notebook execution, and helper scripts for notebook-shaped jobs.\nThe transferable part is not Python or notebooks. The transferable part is:\n\nconnect to CSD3\nput code and inputs in a predictable project folder\nmake one unit of work runnable from the command line\nsubmit that unit through Slurm\nscale it with arrays or repeated submissions\nmonitor logs and sync outputs back\n\nOther workflows can use the same shape with a different command layer:\n\nR scripts run with Rscript\nMATLAB scripts or functions submitted through Slurm\nshell scripts\ncompiled programs\nsoftware loaded through CSD3 modules\nworkflow-specific tools for your field\n\nCSD3 has specific guidance for R and Rscript, MATLAB, modules, and Python.",
     "crumbs": [
       "Start",
-      "Resources"
+      "Tools And Access"
     ]
   },
   {
-    "objectID": "workshop/12-resources.html#python-workflow-references",
-    "href": "workshop/12-resources.html#python-workflow-references",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html#local-machine-ssh-config",
+    "href": "workshop/01-tools-and-access.html#local-machine-ssh-config",
+    "title": "Tools And Access",
     "section": "",
-    "text": "uv is the Python environment and package tool used in the setup example.\nPython venv explains the standard-library virtual environment concept behind isolated project environments.\nPython argparse tutorial is useful when turning a local script into a command that handles one unit of work at a time.\nPapermill is relevant for notebook-based workflows and the notebook helper scripts in this repo.",
+    "text": "Add a named host on your local machine:\nHost csd3-login\n  HostName login-cpu.hpc.cam.ac.uk\n  User &lt;your-crsid-or-username&gt;\nCheck plain SSH first:\nssh csd3-login\nIf plain SSH cannot connect, fix that before debugging VS Code.",
     "crumbs": [
       "Start",
-      "Resources"
+      "Tools And Access"
     ]
   },
   {
-    "objectID": "workshop/12-resources.html#local-project-references",
-    "href": "workshop/12-resources.html#local-project-references",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html#local-machine-vs-code-remote-ssh",
+    "href": "workshop/01-tools-and-access.html#local-machine-vs-code-remote-ssh",
+    "title": "Tools And Access",
     "section": "",
-    "text": "Use the pages in this site as the first reference for the workflow:\n\nOrientation\nWorkflow Map\nSubmit The Batch\nMonitor And Recover\nBring Results Back\nProject-Side Script Examples\n\nUse the root scripts when you need exact behavior for the notebook helper:\n\nrun_notebook.sbatch\nsubmit_notebooks.sh\ncheck_run.sh\nresubmit_failed.sh",
+    "text": "In VS Code:\n\nInstall the Remote - SSH extension.\nOpen Remote Explorer.\nChoose csd3-login.\nComplete MFA if prompted.\nOpen the remote project folder, usually under ~/workspace/.\nUse the integrated terminal for CSD3 commands.\n\nRemote Explorer is where configured SSH targets appear:\n\n\n\nVS Code Remote Explorer showing SSH targets\n\n\nCommands labeled “CSD3” in this guide run in that remote terminal.",
     "crumbs": [
       "Start",
-      "Resources"
+      "Tools And Access"
     ]
   },
   {
-    "objectID": "workshop/12-resources.html#how-to-use-this-page",
-    "href": "workshop/12-resources.html#how-to-use-this-page",
-    "title": "Resources",
+    "objectID": "workshop/01-tools-and-access.html#fallback-login-web",
+    "href": "workshop/01-tools-and-access.html#fallback-login-web",
+    "title": "Tools And Access",
     "section": "",
-    "text": "Use these links to answer specific questions after using the guide: connection problems, CSD3 account details, batch-job behavior, VS Code remote access, Python environments, command-line arguments, or notebook execution.\nDo not turn the resource page into a broad Slurm bibliography. Keep the resource list focused on the CSD3, VS Code, and Python docs readers are most likely to need.",
+    "text": "Use Login-Web when SSH or VS Code is unavailable. It gives shell access, so the CSD3 commands in this guide still apply.",
     "crumbs": [
       "Start",
-      "Resources"
-    ]
-  },
-  {
-    "objectID": "workshop/10-bring-results-back.html",
-    "href": "workshop/10-bring-results-back.html",
-    "title": "Bring Results Back",
-    "section": "",
-    "text": "Generated outputs normally come back from CSD3 with rsync, not Git.\nThe goal is to retrieve the outputs you need for local inspection, summaries, figures, or reports without copying every temporary file.\n\n\nUse a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed locally.\n\n\n\ncd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.\n\n\n\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"\n\n\n\nAfter generated files are local, run the local checks or summaries for your project:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.",
-    "crumbs": [
-      "Start",
-      "Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-bring-results-back.html#choose-a-filter",
-    "href": "workshop/10-bring-results-back.html#choose-a-filter",
-    "title": "Bring Results Back",
-    "section": "",
-    "text": "Use a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed locally.",
-    "crumbs": [
-      "Start",
-      "Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
-    "href": "workshop/10-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
-    "title": "Bring Results Back",
-    "section": "",
-    "text": "cd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.",
-    "crumbs": [
-      "Start",
-      "Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-bring-results-back.html#local-machine-retrieve-generated-outputs",
-    "href": "workshop/10-bring-results-back.html#local-machine-retrieve-generated-outputs",
-    "title": "Bring Results Back",
-    "section": "",
-    "text": "rsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"",
-    "crumbs": [
-      "Start",
-      "Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-bring-results-back.html#local-machine-inspect-and-summarize",
-    "href": "workshop/10-bring-results-back.html#local-machine-inspect-and-summarize",
-    "title": "Bring Results Back",
-    "section": "",
-    "text": "After generated files are local, run the local checks or summaries for your project:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.",
-    "crumbs": [
-      "Start",
-      "Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/08-follow-up-jobs.html",
-    "href": "workshop/08-follow-up-jobs.html",
-    "title": "Run Follow-Up Jobs",
-    "section": "",
-    "text": "Some workflows need a second stage after the first batch succeeds.\nExamples:\n\nmerge per-unit outputs\nclean up intermediate prepared units\nsubmit pooled or aggregate jobs\nrun analysis notebooks\nbuild figures or reports\n\nThe key idea is ordering. The follow-up should run after the first batch reaches the state you intended.\n\n\nThis repo calls the follow-up script a sentinel. It is submitted as a Slurm job that depends on the notebook array finishing successfully.\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  --sentinel \"$HOME/workspace/my_project/scripts/after_jobs.sh\" \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\"\nThe sentinel script receives the project directory as its first argument.\n\n\n\nThe repo includes documented project-side examples in examples/project-scripts. A follow-up script for your own project should live with that project and be adapted to its output folders and downstream stages.\ncat &gt; \"$HOME/workspace/my_project/scripts/after_jobs.sh\" &lt;&lt;'EOF'\n#!/bin/bash\nset -euo pipefail\n\nPROJECT_DIR=\"${1:?Usage: after_jobs.sh &lt;project_dir&gt;}\"\ncd \"$PROJECT_DIR\"\n\nsource \"$HOME/workspace/cluster_env.sh\"\n\necho \"$(date): merging per-unit outputs\"\npython scripts/merge_outputs.py\n\necho \"$(date): submitting analysis notebooks\"\n\"$HOME/workspace/sbatch/submit_notebooks.sh\" \\\n  \"$PROJECT_DIR/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nEOF\n\nchmod +x \"$HOME/workspace/my_project/scripts/after_jobs.sh\"\nThis is only a pattern. Your follow-up script should contain the downstream work your project actually needs.\n\n\n\nsqueue -u \"$USER\" | grep post-fit\nThe helper uses the post-fit job name for the sentinel. If the first batch fails, an afterok sentinel does not run. Inspect and repair the batch before forcing downstream work.\n\n\n\nOutside the notebook helper, Slurm dependencies express the same idea:\nFIRST_JOBID=\"$(\n  sbatch --parsable \\\n    --job-name=batch \\\n    --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && bash scripts/run_batch.sh\"\n)\"\n\nsbatch \\\n  --dependency \"afterok:$FIRST_JOBID\" \\\n  --job-name=follow-up \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && bash scripts/after_jobs.sh\"\nUse afterok when the follow-up should run only after success. Use afterany when the follow-up should run after success or failure.",
-    "crumbs": [
-      "Start",
-      "Run Follow-Up Jobs"
-    ]
-  },
-  {
-    "objectID": "workshop/08-follow-up-jobs.html#notebook-helper-sentinel",
-    "href": "workshop/08-follow-up-jobs.html#notebook-helper-sentinel",
-    "title": "Run Follow-Up Jobs",
-    "section": "",
-    "text": "This repo calls the follow-up script a sentinel. It is submitted as a Slurm job that depends on the notebook array finishing successfully.\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  --sentinel \"$HOME/workspace/my_project/scripts/after_jobs.sh\" \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\"\nThe sentinel script receives the project directory as its first argument.",
-    "crumbs": [
-      "Start",
-      "Run Follow-Up Jobs"
-    ]
-  },
-  {
-    "objectID": "workshop/08-follow-up-jobs.html#a-follow-up-script",
-    "href": "workshop/08-follow-up-jobs.html#a-follow-up-script",
-    "title": "Run Follow-Up Jobs",
-    "section": "",
-    "text": "The repo includes documented project-side examples in examples/project-scripts. A follow-up script for your own project should live with that project and be adapted to its output folders and downstream stages.\ncat &gt; \"$HOME/workspace/my_project/scripts/after_jobs.sh\" &lt;&lt;'EOF'\n#!/bin/bash\nset -euo pipefail\n\nPROJECT_DIR=\"${1:?Usage: after_jobs.sh &lt;project_dir&gt;}\"\ncd \"$PROJECT_DIR\"\n\nsource \"$HOME/workspace/cluster_env.sh\"\n\necho \"$(date): merging per-unit outputs\"\npython scripts/merge_outputs.py\n\necho \"$(date): submitting analysis notebooks\"\n\"$HOME/workspace/sbatch/submit_notebooks.sh\" \\\n  \"$PROJECT_DIR/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nEOF\n\nchmod +x \"$HOME/workspace/my_project/scripts/after_jobs.sh\"\nThis is only a pattern. Your follow-up script should contain the downstream work your project actually needs.",
-    "crumbs": [
-      "Start",
-      "Run Follow-Up Jobs"
-    ]
-  },
-  {
-    "objectID": "workshop/08-follow-up-jobs.html#csd3-watch-the-follow-up",
-    "href": "workshop/08-follow-up-jobs.html#csd3-watch-the-follow-up",
-    "title": "Run Follow-Up Jobs",
-    "section": "",
-    "text": "squeue -u \"$USER\" | grep post-fit\nThe helper uses the post-fit job name for the sentinel. If the first batch fails, an afterok sentinel does not run. Inspect and repair the batch before forcing downstream work.",
-    "crumbs": [
-      "Start",
-      "Run Follow-Up Jobs"
-    ]
-  },
-  {
-    "objectID": "workshop/08-follow-up-jobs.html#generic-slurm-dependency",
-    "href": "workshop/08-follow-up-jobs.html#generic-slurm-dependency",
-    "title": "Run Follow-Up Jobs",
-    "section": "",
-    "text": "Outside the notebook helper, Slurm dependencies express the same idea:\nFIRST_JOBID=\"$(\n  sbatch --parsable \\\n    --job-name=batch \\\n    --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && bash scripts/run_batch.sh\"\n)\"\n\nsbatch \\\n  --dependency \"afterok:$FIRST_JOBID\" \\\n  --job-name=follow-up \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && bash scripts/after_jobs.sh\"\nUse afterok when the follow-up should run only after success. Use afterany when the follow-up should run after success or failure.",
-    "crumbs": [
-      "Start",
-      "Run Follow-Up Jobs"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html",
-    "href": "workshop/06-run-one-slurm-job.html",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "Before submitting a whole batch, run one scheduled job. This is sometimes called a smoke test, but the teaching goal here is more specific: understand what one Slurm job is made of.\nThe main example uses one prepared notebook and this repo’s notebook runner.\n\n\nOne notebook-helper job involves these files:\n\none prepared notebook, such as analyses/rendered/fitting_example_unit0.ipynb\nrun_notebook.sbatch, the Slurm job script\ncluster_env.sh, the environment activation script\na runs/ directory for stdout and stderr logs\nwhatever output files the notebook writes\n\nThe prepared notebook is the unit of work. The sbatch file tells Slurm how to run that unit on a compute node.\n\n\n\nrun_notebook.sbatch is the notebook runner for this repo. The top of the file contains the Slurm resource settings:\n#SBATCH --job-name=nb\n#SBATCH -A TALMI-SL3-CPU\n#SBATCH -p icelake-himem\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --time=12:00:00\n#SBATCH --mem=16G\n#SBATCH --cpus-per-task=1\nThose lines choose the job name, account, partition, walltime, memory, and CPU count. For your own project, the account and resource requests need to match the allocation and workload you are using.\nThe rest of the script does the repeatable setup:\n\nresolves the notebook path\nfinds the project root by walking up to the nearest .git directory\nchanges into the project directory\nsources $HOME/workspace/cluster_env.sh\nsets thread-related environment variables from the Slurm CPU request\nruns Papermill on the notebook\n\nFor a single job, the notebook path is passed as an argument. For an array job later, the script reads the notebook path from a manifest line.\n\n\n\nRun this from a CSD3 terminal:\nmkdir -p \"$HOME/workspace/my_project/runs\"\ncd \"$HOME/workspace/sbatch\"\n\nsbatch \\\n  --output \"$HOME/workspace/my_project/runs/single_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/single_%j.err\" \\\n  run_notebook.sbatch \\\n  \"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\nThe sbatch command prints a job ID. Slurm queues the work and later runs it on a compute node.\nThe %j in the log paths is replaced by the Slurm job ID.\n\n\n\nsqueue -u \"$USER\"\nJobs usually disappear from squeue after they finish. That does not mean the job failed; it means you should inspect the logs and outputs.\n\n\n\nSINGLE_OUT=\"$(ls -t \"$HOME/workspace/my_project/runs\"/single_*.out | head -1)\"\nSINGLE_ERR=\"${SINGLE_OUT%.out}.err\"\n\nsed -n '1,200p' \"$SINGLE_OUT\"\nsed -n '1,200p' \"$SINGLE_ERR\"\nThe .out file should show the script starting and finishing the notebook. The .err file is where missing files, missing commands, import errors, and tracebacks usually appear.\n\n\n\nFor this notebook runner, Papermill writes the executed notebook back to the same path:\n~/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\nYour notebook may also write generated files to folders such as outputs/, fits/, figures/, or reports/.\n\n\n\nFor R, MATLAB, shell, or compiled workflows, the prepared unit may be a script, manifest row, or input file instead of a notebook. The one-job anatomy is still the same:\n\none prepared unit\none sbatch script or sbatch --wrap command\nresource settings\nenvironment activation\nstdout and stderr logs\ngenerated output files\n\nOnce one scheduled job is understandable, the next step is scaling the same shape to the full batch.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#the-files-in-one-job",
-    "href": "workshop/06-run-one-slurm-job.html#the-files-in-one-job",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "One notebook-helper job involves these files:\n\none prepared notebook, such as analyses/rendered/fitting_example_unit0.ipynb\nrun_notebook.sbatch, the Slurm job script\ncluster_env.sh, the environment activation script\na runs/ directory for stdout and stderr logs\nwhatever output files the notebook writes\n\nThe prepared notebook is the unit of work. The sbatch file tells Slurm how to run that unit on a compute node.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#what-run_notebook.sbatch-provides",
-    "href": "workshop/06-run-one-slurm-job.html#what-run_notebook.sbatch-provides",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "The top of run_notebook.sbatch contains the Slurm resource settings:\n#SBATCH --job-name=nb\n#SBATCH -A TALMI-SL3-CPU\n#SBATCH -p icelake-himem\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --time=12:00:00\n#SBATCH --mem=16G\n#SBATCH --cpus-per-task=1\nThose lines choose the job name, account, partition, walltime, memory, and CPU count. For your own project, the account and resource requests need to match the allocation and workload you are using.\nThe rest of the script does the repeatable setup:\n\nresolves the notebook path\nfinds the project root by walking up to the nearest .git directory\nchanges into the project directory\nsources $HOME/workspace/cluster_env.sh\nsets thread-related environment variables from the Slurm CPU request\nruns Papermill on the notebook\n\nFor a single job, the notebook path is passed as an argument. For an array job later, the script reads the notebook path from a manifest line.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#csd3-submit-one-prepared-notebook",
-    "href": "workshop/06-run-one-slurm-job.html#csd3-submit-one-prepared-notebook",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "Run this from a CSD3 terminal:\nmkdir -p \"$HOME/workspace/my_project/runs\"\ncd \"$HOME/workspace/sbatch\"\n\nsbatch \\\n  --output \"$HOME/workspace/my_project/runs/single_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/single_%j.err\" \\\n  run_notebook.sbatch \\\n  \"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\nThe sbatch command prints a job ID. Slurm queues the work and later runs it on a compute node.\nThe %j in the log paths is replaced by the Slurm job ID.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#csd3-watch-queue-state",
-    "href": "workshop/06-run-one-slurm-job.html#csd3-watch-queue-state",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "squeue -u \"$USER\"\nJobs usually disappear from squeue after they finish. That does not mean the job failed; it means you should inspect the logs and outputs.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-logs",
-    "href": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-logs",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "SINGLE_OUT=\"$(ls -t \"$HOME/workspace/my_project/runs\"/single_*.out | head -1)\"\nSINGLE_ERR=\"${SINGLE_OUT%.out}.err\"\n\nsed -n '1,200p' \"$SINGLE_OUT\"\nsed -n '1,200p' \"$SINGLE_ERR\"\nThe .out file should show the script starting and finishing the notebook. The .err file is where missing files, missing commands, import errors, and tracebacks usually appear.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-output-artifact",
-    "href": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-output-artifact",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "For this notebook runner, Papermill writes the executed notebook back to the same path:\n~/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\nYour notebook may also write generated files to folders such as outputs/, fits/, figures/, or reports/.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#adaptation-notes",
-    "href": "workshop/06-run-one-slurm-job.html#adaptation-notes",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "For R, MATLAB, shell, or compiled workflows, the prepared unit may be a script, manifest row, or input file instead of a notebook. The one-job anatomy is still the same:\n\none prepared unit\none sbatch script or sbatch --wrap command\nresource settings\nenvironment activation\nstdout and stderr logs\ngenerated output files\n\nOnce one scheduled job is understandable, the next step is scaling the same shape to the full batch.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html",
-    "href": "workshop/04-prepare-work-units.html",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "Before using Slurm, make the repeated work explicit. A work unit is the thing one scheduled job should run: one subject, one input file, one simulation seed, one parameter setting, or one report.\nThis page is about preparing those units. It does not submit anything to Slurm.\n\n\nBefore submission, the full batch needs to be explicit: what units exist, and how one scheduled task identifies the unit it should run.\nOne common pattern is a single parametrizable runner plus a manifest:\nscripts/run_one_unit.py\njobs/manifest.txt\nThe runner knows how to process one unit. The manifest lists every unit in the batch. Later, each Slurm array task reads one manifest row.\nAnother pattern is one concrete file per unit:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/fitting_example_unit2.ipynb\nThat concrete-file pattern is heavier, but it can be useful for notebook workflows because each generated notebook is inspectable and can be resubmitted directly.\nThis repo’s notebook helper uses both ideas. It submits one rendered notebook per work unit, and submit_notebooks.sh builds a manifest of those notebook paths so each Slurm array task runs one file.\n\n\n\nA prepared unit should make these choices explicit:\n\nwhich unit it runs\nwhich data or parameter files it reads\nwhere generated outputs are written\nwhich project code it imports or calls\nwhether it can run without prompts, clicks, or manual edits\n\nThe exact representation can differ. The useful habit is to make the batch explicit enough that a later submission command can select the right subset.\n\n\n\nThe main example uses prepared notebooks. The pattern is:\nmaintained notebook\n  -&gt; render concrete work units\n  -&gt; analyses/rendered/fitting_example_unit0.ipynb\n  -&gt; analyses/rendered/fitting_example_unit1.ipynb\n  -&gt; analyses/rendered/fitting_example_unit2.ipynb\nThe rendered notebooks are the files that get transferred to CSD3 and submitted later. Each rendered notebook should already know which unit it is responsible for and where its outputs should go.\n\n\n\nFor a notebook workflow, keep this distinction clear:\ntemplate/source notebook: the notebook you maintain by hand. It contains the code for the task and, if needed, parameters that can be filled in for one unit.\nrendered notebook: a concrete generated notebook for one work unit, written to a directory such as analyses/rendered/.\nSome projects keep separate source and template notebooks. Others use one maintained notebook as both the source and the template. The important distinction is between the maintained notebook you edit and the rendered notebooks you submit to CSD3.\n\n\n\nIn the notebook-helper pattern, preparation turns one maintained notebook into many concrete notebooks, one per work unit. This is where the full batch becomes visible before anything is submitted to Slurm.\nPapermill can execute notebooks from the command line and can also be used by a project-specific renderer to create prepared notebooks.\nMany projects use a flag such as prepare_only=True for this step: create the rendered notebooks, but do not run the expensive computation yet.\nOne generic rendering command might look like:\ncd \"$HOME/workspace/my_project\"\npapermill analyses/render_work_units.ipynb \\\n  analyses/render_work_units.ipynb \\\n  --progress-bar\nThe important output is the prepared set:\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | sort | head\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | wc -l\nFor rendered notebooks, the unit identity often appears in the filename:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/analysis_example.ipynb\n\n\n\nFor R, MATLAB, shell, or compiled workflows, the prepared unit may not be a notebook. These workflows often use the parametrizable runner plus manifest pattern:\n\none row in a manifest\none parameter file\none shell script plus arguments\none command that takes an input path and output path\n\nThe same rule still applies: prepare a batch of explicit units first. Later pages replace “rendered notebook” with your prepared script, manifest row, or input file.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#the-main-pattern",
-    "href": "workshop/04-prepare-work-units.html#the-main-pattern",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "The main example uses prepared notebooks. The pattern is:\nsource notebook or template\n  -&gt; render concrete work units\n  -&gt; analyses/rendered/fitting_example_unit0.ipynb\n  -&gt; analyses/rendered/fitting_example_unit1.ipynb\n  -&gt; analyses/rendered/fitting_example_unit2.ipynb\nThe rendered notebooks are the files that get transferred to CSD3 and submitted later. Each rendered notebook should already know which unit it is responsible for and where its outputs should go.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#source-template-rendered",
-    "href": "workshop/04-prepare-work-units.html#source-template-rendered",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "For a notebook workflow, keep these roles separate:\nsource notebook: the notebook you edit by hand.\ntemplate notebook: a reusable notebook with parameters that can be filled in for one unit.\nrendered notebook: a concrete prepared work unit, written to a directory such as analyses/rendered/.\nThe source or template is human-authored. The rendered notebooks are generated inputs for cluster work.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#render-without-running-the-heavy-work",
-    "href": "workshop/04-prepare-work-units.html#render-without-running-the-heavy-work",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "Papermill can execute notebooks from the command line and can also be used by a project-specific renderer to create prepared notebooks.\nMany notebook workflows use a flag such as prepare_only=True: render the concrete notebooks, but do not run the expensive computation yet.\nOne generic rendering command might look like:\ncd \"$HOME/workspace/my_project\"\npapermill analyses/render_work_units.ipynb \\\n  analyses/render_work_units.ipynb \\\n  --progress-bar\nThe important output is the prepared set:\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | sort | head\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | wc -l",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#what-a-prepared-unit-should-contain",
-    "href": "workshop/04-prepare-work-units.html#what-a-prepared-unit-should-contain",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "A prepared unit should make these choices explicit:\n\nwhich unit it runs\nwhich data or parameter files it reads\nwhere generated outputs are written\nwhich project code it imports or calls\nwhether it can run without prompts, clicks, or manual edits\n\nThe exact representation can differ. The useful habit is to make the batch explicit enough that a later submission command can select the right subset.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#adaptation-notes",
-    "href": "workshop/04-prepare-work-units.html#adaptation-notes",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "For R, MATLAB, shell, or compiled workflows, the prepared unit may not be a notebook. It might be:\n\none row in a manifest\none parameter file\none shell script plus arguments\none command that takes an input path and output path\n\nThe same rule still applies: prepare a batch of explicit units first. Later pages replace “rendered notebook” with your prepared script, manifest row, or input file.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
+      "Tools And Access"
     ]
   },
   {
@@ -385,8 +121,8 @@
     ]
   },
   {
-    "objectID": "workshop/02-environment-setup.html#csd3-create-cluster_env.sh",
-    "href": "workshop/02-environment-setup.html#csd3-create-cluster_env.sh",
+    "objectID": "workshop/02-environment-setup.html#csd3-create-the-activation-script",
+    "href": "workshop/02-environment-setup.html#csd3-create-the-activation-script",
     "title": "Environment Setup",
     "section": "",
     "text": "Create one activation script that manual commands and Slurm jobs can both source.\nFor the Python example:\ncat &gt; \"$HOME/workspace/cluster_env.sh\" &lt;&lt;'EOF'\nsource \"$HOME/.local/bin/env\"\nsource \"$HOME/workspace/.venv/bin/activate\"\nEOF\n\nchmod +x \"$HOME/workspace/cluster_env.sh\"\nFor a module-based workflow, the same file might contain:\nmodule purge\nmodule load &lt;module-name&gt;\nThe point is not the filename. The point is to keep activation commands in one place so the terminal test and the submitted job use the same setup.",
@@ -407,99 +143,33 @@
     ]
   },
   {
-    "objectID": "workshop/00-orientation.html",
-    "href": "workshop/00-orientation.html",
-    "title": "Orientation",
-    "section": "",
-    "text": "This guide is about using CSD3 for research work that is too large, too slow, or too repetitive for a local machine.\nThe examples use generic project names. The main path uses a Python and notebook-oriented workflow to make the steps concrete, but the same pattern can be adapted to other tools.\n\n\nCSD3 helps when work can be split into independent jobs. Common examples:\n\nsimulations with many parameter settings\nmodel fitting across subjects, datasets, or hyperparameters\nbatch data processing\nreport or figure generation\nnotebook execution\nrepeated command-line analyses\n\nThe common pattern is:\nprepare inputs -&gt; submit jobs -&gt; monitor logs -&gt; collect outputs\nThis is different from using the cluster as one bigger laptop. The strongest cluster workflows are designed as batches of self-contained jobs.\n\n\n\nKeep these places separate while reading the commands:\nlocal machine\n  write code, prepare inputs, inspect final results\n\nCSD3 login node\n  edit files, pull repos, submit jobs, inspect logs\n\nCSD3 compute node\n  runs the scheduled job after Slurm starts it\nYou usually do not log into a compute node yourself. You submit a job from the login node, and Slurm starts it later on a compute node.\n\n\n\nA common local pattern is to write one script that loops over every unit of work: run this analysis for every subject, every input file, every simulation seed, or every parameter setting.\nThat can be fine on a laptop, but it hides the parallelism from the scheduler. From Slurm’s point of view, that script is just one long job.\nA local script often looks like this:\nfor each input:\n  run the analysis\nThe cluster version usually looks more like this:\nrun the analysis for this one input\nFor cluster work, the better pattern is usually to make one unit of work explicit. Instead of “run everything,” the job should mean something like “run case 001,” “fit subject 17,” “simulate seed 42,” or “process this one input file.”\nThen Slurm can run many copies of the same command with different inputs.\nA good cluster job needs:\n\na command that runs one unit of work\nparameters or input files that identify that unit\na working directory and software environment\npredictable output paths for that unit\nstdout and stderr logs for that unit\nresource requests that fit one unit, such as time, memory, CPUs, and account\n\nThe important design choice is that the job should not contain the whole outer loop. The job should handle one unit cleanly, and the scheduler should handle the repetition.\n\n\n\nSlurm is the scheduler on CSD3. It decides when and where jobs run.\nsbatch is the command that submits a job to Slurm.\nA job is one scheduled piece of work.\nA job array is a group of similar jobs submitted together.\nA login node is where you connect, edit, pull code, and submit jobs.\nA compute node is where the job actually runs.\nstdout and stderr logs are the text files that show normal output and error output from a job.\n\n\n\nThe login node is not where large computations should run. Treat it as a control room for editing, submitting, and inspecting work. Compute-heavy work should run as scheduled jobs.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
-    "objectID": "workshop/00-orientation.html#what-csd3-adds",
-    "href": "workshop/00-orientation.html#what-csd3-adds",
-    "title": "Orientation",
-    "section": "",
-    "text": "CSD3 helps when work can be split into independent jobs. Common examples:\n\nsimulations with many parameter settings\nmodel fitting across subjects, datasets, or hyperparameters\nbatch data processing\nreport or figure generation\nnotebook execution\nrepeated command-line analyses\n\nThe common pattern is:\nprepare inputs -&gt; submit jobs -&gt; monitor logs -&gt; collect outputs\nThis is different from using the cluster as one bigger laptop. The strongest cluster workflows are designed as batches of self-contained jobs.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
-    "objectID": "workshop/00-orientation.html#the-three-places",
-    "href": "workshop/00-orientation.html#the-three-places",
-    "title": "Orientation",
-    "section": "",
-    "text": "Keep these places separate while reading the commands:\nlocal machine\n  write code, prepare inputs, inspect final results\n\nCSD3 login node\n  edit files, pull repos, submit jobs, inspect logs\n\nCSD3 compute node\n  runs the scheduled job after Slurm starts it\nYou usually do not log into a compute node yourself. You submit a job from the login node, and Slurm starts it later on a compute node.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
-    "objectID": "workshop/00-orientation.html#what-a-job-needs",
-    "href": "workshop/00-orientation.html#what-a-job-needs",
-    "title": "Orientation",
-    "section": "",
-    "text": "A common local pattern is to write one script that loops over every unit of work: run this analysis for every subject, every input file, every simulation seed, or every parameter setting.\nThat can be fine on a laptop, but it hides the parallelism from the scheduler. From Slurm’s point of view, that script is just one long job.\nA local script often looks like this:\nfor each input:\n  run the analysis\nThe cluster version usually looks more like this:\nrun the analysis for this one input\nFor cluster work, the better pattern is usually to make one unit of work explicit. Instead of “run everything,” the job should mean something like “run case 001,” “fit subject 17,” “simulate seed 42,” or “process this one input file.”\nThen Slurm can run many copies of the same command with different inputs.\nA good cluster job needs:\n\na command that runs one unit of work\nparameters or input files that identify that unit\na working directory and software environment\npredictable output paths for that unit\nstdout and stderr logs for that unit\nresource requests that fit one unit, such as time, memory, CPUs, and account\n\nThe important design choice is that the job should not contain the whole outer loop. The job should handle one unit cleanly, and the scheduler should handle the repetition.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
-    "objectID": "workshop/00-orientation.html#vocabulary",
-    "href": "workshop/00-orientation.html#vocabulary",
-    "title": "Orientation",
-    "section": "",
-    "text": "Slurm is the scheduler on CSD3. It decides when and where jobs run.\nsbatch is the command that submits a job to Slurm.\nA job is one scheduled piece of work.\nA job array is a group of similar jobs submitted together.\nA login node is where you connect, edit, pull code, and submit jobs.\nA compute node is where the job actually runs.\nstdout and stderr logs are the text files that show normal output and error output from a job.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
-    "objectID": "workshop/00-orientation.html#main-point",
-    "href": "workshop/00-orientation.html#main-point",
-    "title": "Orientation",
-    "section": "",
-    "text": "The login node is not where large computations should run. Treat it as a control room for editing, submitting, and inspecting work. Compute-heavy work should run as scheduled jobs.",
-    "crumbs": [
-      "Start",
-      "Orientation"
-    ]
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Remote Cluster Computing For Research Workflows",
     "section": "",
-    "text": "This site is a practical guide to using CSD3 for research work that can be split into scheduled jobs.\nThe guide is for code-savvy researchers who are comfortable with files and a terminal, but who may not yet have a working mental model for remote clusters, Git, or moving files to and from CSD3. The examples use generic project names so the pattern can be adapted to different projects.\n\n\nThis guide helps you:\n\nexplain where work happens on the local Mac, CSD3 login node, and CSD3 compute nodes\nuse VS Code Remote-SSH as the main interface to CSD3\nrecognize workloads that fit a cluster well\nprepare self-contained work units from scripts, manifests, notebooks, or command-line tools\nmove source code, prepared inputs, and generated outputs deliberately\nrun one Slurm job before scaling up\nsubmit batches and job arrays through Slurm\ninspect queues, logs, and failure states\nrecover transient failures without masking structural problems\nsync generated results back for local inspection or summaries\n\n\n\n\nRead the pages in order for a complete workflow:\n\nOrientation. Which workloads belong on a cluster.\nTools and access. VS Code Remote-SSH, SSH, and Login-Web fallback.\nEnvironment setup. ~/workspace, software environment, and allocation checks.\nWorkflow map. Prepare, transfer, submit, monitor, recover, transfer back.\nPrepare work units. Rendered notebooks, scripts, and self-contained inputs.\nTransfer files. rsync for files, Git for source code.\nRun one Slurm job, then submit the batch.\nMonitor and recover. squeue, logs, stderr, and resubmission.\nFollow-up jobs. Sentinels, dependencies, and downstream work.\nPost-process or bring results back. Decide what stays on CSD3 and what comes home.\nFocused reruns. Rerun only the stale, failed, or changed subset.\n\nThe same sequence can support a quick walkthrough or self-guided reference.\n\n\n\nFor the full guide path, read the pages in sidebar order starting with Orientation.\nThese pages are not a complete CSD3 manual. They give a working path through the concepts and link out to official documentation where details may change.\n\n\n\nThis repo also contains a small notebook execution layer. These scripts are useful when a project has already prepared concrete notebook work units, such as files under analyses/rendered/.\n\nrun_notebook.sbatch: Slurm job script that runs one prepared notebook with Papermill. It can run a single notebook path directly, or read one notebook path from a manifest when used in an array.\nsubmit_notebooks.sh: builds a manifest from a notebook directory and filename pattern, creates a runs/&lt;run_id&gt;/ directory, submits the Slurm array, and can attach a project-specific sentinel script.\ncheck_run.sh: summarizes a run directory using Slurm accounting state and can show per-task notebook and stderr paths with -v.\nresubmit_failed.sh: finds failed notebook tasks from a run, copies them into a rerun directory, and resubmits only those failed tasks.\n\nThat is the complete set of reusable root helper scripts. Follow-up sentinel scripts are project-specific and live in the project that needs them. The guide also shows how the same Slurm pattern adapts to scripts, manifests, and other command-line work.\nFor project-side examples, see examples/project-scripts. Those files show how a project can merge per-unit outputs and submit downstream notebook batches after the root helper scripts finish.\n\n\n\nCSD3 Quick Start is the starting point for new users.\nConnecting to CSD3 covers SSH access and connection troubleshooting.\nRunning Jobs on CSD3 is the official CSD3 reference for batch jobs.\nLogin-Web Interface is the browser-based fallback for shell access.\nVS Code Remote Explorer is the VS Code view that shows configured SSH targets.\nuv is the Python environment and package tool used in the setup example.\nPython venv explains the standard-library virtual environment concept behind isolated project environments.\nPython argparse tutorial is useful when turning a local script into a command that handles one unit of work at a time.\nPapermill is relevant for notebook-based workflows and the notebook helper scripts in this repo.",
+    "text": "This site is a practical guide to using CSD3 for research work that can be split into scheduled jobs.\nThe guide is for code-savvy researchers who are comfortable with files and a terminal, but who may not yet have a working mental model for remote clusters, Git, or moving files to and from CSD3. The examples use generic project names so the pattern can be adapted to different projects.\nThe workflow has a repeatable shape:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"prepare\"] --&gt; B[\"transfer\"]\n  B --&gt; C[\"run one\"]\n  C --&gt; D[\"batch\"]\n  D --&gt; E[\"monitor\"]\n  E --&gt; F[\"follow-up / results\"]\n  F --&gt; G[\"rerun narrowly\"]\n\n\n\n\n\n\n\n\nThis guide helps you:\n\nexplain where work happens on the local Mac, CSD3 login node, and CSD3 compute nodes\nuse VS Code Remote-SSH as the main interface to CSD3\nrecognize workloads that fit a cluster well\nprepare self-contained work units from scripts, manifests, notebooks, or command-line tools\nmove source code, prepared inputs, and generated outputs deliberately\nrun one Slurm job before scaling up\nsubmit batches and job arrays through Slurm\ninspect queues, logs, and failure states\nrecover transient failures without masking structural problems\nsync generated results back for local inspection or summaries\n\n\n\n\nRead the pages in order for a complete workflow:\n\nOrientation. Which workloads belong on a cluster.\nTools and access. VS Code Remote-SSH, SSH, and Login-Web fallback.\nEnvironment setup. ~/workspace, software environment, and allocation checks.\nWorkflow map. Prepare, transfer, submit, monitor, recover, transfer back.\nPrepare work units. Rendered notebooks, scripts, and self-contained inputs.\nTransfer files. rsync for files, Git for source code.\nRun one Slurm job, then submit the batch.\nMonitor and recover. squeue, logs, stderr, and resubmission.\nFollow-up jobs. Sentinels, dependencies, and downstream work.\nPost-process or bring results back. Decide what stays on CSD3 and what comes home.\nFocused reruns. Rerun only the stale, failed, or changed subset.\n\nThe same sequence can support a quick walkthrough or self-guided reference.\n\n\n\nFor the full guide path, read the pages in sidebar order starting with Orientation.\nThese pages are not a complete CSD3 manual. They give a working path through the concepts and link out to official documentation where details may change.\n\n\n\nThis repo also contains a small notebook execution layer. These scripts are useful when a project has already prepared concrete notebook work units, such as files under analyses/rendered/.\n\nrun_notebook.sbatch: Slurm job script that runs one prepared notebook with Papermill. It can run a single notebook path directly, or read one notebook path from a manifest when used in an array.\nsubmit_notebooks.sh: builds a manifest from a notebook directory and filename pattern, creates a runs/&lt;run_id&gt;/ directory, submits the Slurm array, and can attach a project-specific sentinel script.\ncheck_run.sh: summarizes a run directory using Slurm accounting state and can show per-task notebook and stderr paths with -v.\nresubmit_failed.sh: finds failed notebook tasks from a run, copies them into a rerun directory, and resubmits only those failed tasks.\n\nThat is the complete set of reusable root helper scripts. Follow-up sentinel scripts are project-specific and live in the project that needs them. The guide also shows how the same Slurm pattern adapts to scripts, manifests, and other command-line work.\nFor project-side examples, see examples/project-scripts. Those files show how a project can merge per-unit outputs and submit downstream notebook batches after the root helper scripts finish.\n\n\n\nCSD3 Quick Start is the starting point for new users.\nConnecting to CSD3 covers SSH access and connection troubleshooting.\nRunning Jobs on CSD3 is the official CSD3 reference for batch jobs.\nLogin-Web Interface is the browser-based fallback for shell access.\nVS Code Remote Explorer is the VS Code view that shows configured SSH targets.\nuv is the Python environment and package tool used in the setup example.\nPython venv explains the standard-library virtual environment concept behind isolated project environments.\nPython argparse tutorial is useful when turning a local script into a command that handles one unit of work at a time.\nPapermill is relevant for notebook-based workflows and the notebook helper scripts in this repo.",
     "crumbs": [
       "Start",
       "Remote Cluster Computing For Research Workflows"
     ]
   },
   {
-    "objectID": "index.html#what-participants-should-leave-with",
-    "href": "index.html#what-participants-should-leave-with",
+    "objectID": "index.html#what-this-guide-helps-you-do",
+    "href": "index.html#what-this-guide-helps-you-do",
     "title": "Remote Cluster Computing For Research Workflows",
     "section": "",
-    "text": "Participants should be able to:\n\nexplain where work happens on the local Mac, CSD3 login node, and CSD3 compute nodes\nuse VS Code Remote-SSH as the main interface to CSD3\nrecognize workloads that fit a cluster well\nprepare self-contained work units from scripts, manifests, notebooks, or command-line tools\nmove source code, prepared inputs, and generated outputs deliberately\nrun one Slurm job before scaling up\nsubmit batches and job arrays through Slurm\ninspect queues, logs, and failure states\nrecover transient failures without masking structural problems\nsync generated results back for local inspection or summaries",
+    "text": "This guide helps you:\n\nexplain where work happens on the local Mac, CSD3 login node, and CSD3 compute nodes\nuse VS Code Remote-SSH as the main interface to CSD3\nrecognize workloads that fit a cluster well\nprepare self-contained work units from scripts, manifests, notebooks, or command-line tools\nmove source code, prepared inputs, and generated outputs deliberately\nrun one Slurm job before scaling up\nsubmit batches and job arrays through Slurm\ninspect queues, logs, and failure states\nrecover transient failures without masking structural problems\nsync generated results back for local inspection or summaries",
     "crumbs": [
       "Start",
       "Remote Cluster Computing For Research Workflows"
     ]
   },
   {
-    "objectID": "index.html#one-hour-agenda",
-    "href": "index.html#one-hour-agenda",
+    "objectID": "index.html#suggested-path",
+    "href": "index.html#suggested-path",
     "title": "Remote Cluster Computing For Research Workflows",
     "section": "",
-    "text": "0-5: Orientation. Which workloads belong on a cluster.\n5-10: Tools and access. VS Code Remote-SSH, SSH, and Login-Web fallback.\n10-15: Environment setup. ~/workspace, software environment, and allocation checks.\n15-22: Workflow map. Prepare, transfer, submit, monitor, recover, transfer back.\n22-30: Prepare work units. Rendered notebooks, scripts, and self-contained inputs.\n30-35: Transfer files. rsync for files, Git for source code.\n35-42: Run one Slurm job, then submit the batch.\n42-50: Follow-up jobs. Sentinels and dependencies.\n50-56: Monitor and recover. squeue, logs, stderr, and resubmission.\n56-60: Results and reruns. Filtered rsync and focused reruns.",
+    "text": "Read the pages in order for a complete workflow:\n\nOrientation. Which workloads belong on a cluster.\nTools and access. VS Code Remote-SSH, SSH, and Login-Web fallback.\nEnvironment setup. ~/workspace, software environment, and allocation checks.\nWorkflow map. Prepare, transfer, submit, monitor, recover, transfer back.\nPrepare work units. Rendered notebooks, scripts, and self-contained inputs.\nTransfer files. rsync for files, Git for source code.\nRun one Slurm job, then submit the batch.\nMonitor and recover. squeue, logs, stderr, and resubmission.\nFollow-up jobs. Sentinels, dependencies, and downstream work.\nPost-process or bring results back. Decide what stays on CSD3 and what comes home.\nFocused reruns. Rerun only the stale, failed, or changed subset.\n\nThe same sequence can support a quick walkthrough or self-guided reference.",
     "crumbs": [
       "Start",
       "Remote Cluster Computing For Research Workflows"
@@ -517,6 +187,17 @@
     ]
   },
   {
+    "objectID": "index.html#notebook-helper-scripts",
+    "href": "index.html#notebook-helper-scripts",
+    "title": "Remote Cluster Computing For Research Workflows",
+    "section": "",
+    "text": "This repo also contains a small notebook execution layer. These scripts are useful when a project has already prepared concrete notebook work units, such as files under analyses/rendered/.\n\nrun_notebook.sbatch: Slurm job script that runs one prepared notebook with Papermill. It can run a single notebook path directly, or read one notebook path from a manifest when used in an array.\nsubmit_notebooks.sh: builds a manifest from a notebook directory and filename pattern, creates a runs/&lt;run_id&gt;/ directory, submits the Slurm array, and can attach a project-specific sentinel script.\ncheck_run.sh: summarizes a run directory using Slurm accounting state and can show per-task notebook and stderr paths with -v.\nresubmit_failed.sh: finds failed notebook tasks from a run, copies them into a rerun directory, and resubmits only those failed tasks.\n\nThat is the complete set of reusable root helper scripts. Follow-up sentinel scripts are project-specific and live in the project that needs them. The guide also shows how the same Slurm pattern adapts to scripts, manifests, and other command-line work.\nFor project-side examples, see examples/project-scripts. Those files show how a project can merge per-unit outputs and submit downstream notebook batches after the root helper scripts finish.",
+    "crumbs": [
+      "Start",
+      "Remote Cluster Computing For Research Workflows"
+    ]
+  },
+  {
     "objectID": "index.html#core-resources",
     "href": "index.html#core-resources",
     "title": "Remote Cluster Computing For Research Workflows",
@@ -525,72 +206,6 @@
     "crumbs": [
       "Start",
       "Remote Cluster Computing For Research Workflows"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html",
-    "href": "workshop/01-tools-and-access.html",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "The recommended interface in this guide is VS Code Remote-SSH. It gives you a remote file browser, editor, and terminal while still using normal SSH under the hood.\nThe same commands also work from a plain SSH terminal.\n\n\nThe tools fit into a few jobs in the workflow.\nAccess tools get you onto CSD3. VS Code Remote-SSH gives you a remote editor and terminal connected through SSH. Remote Explorer is the VS Code panel where saved SSH targets appear. Plain ssh gives you the same CSD3 shell in a normal terminal. Login-Web is the browser fallback when SSH tooling is not working.\nWhen VS Code is connected to CSD3, its integrated terminal is a CSD3 terminal, not a local Mac terminal.\nFile movement tools keep your local machine and CSD3 in sync. Git is for source code and deliberate small project changes. rsync is for generated inputs, large files, and outputs that should not be committed to Git.\nEnvironment tools make your command runnable on CSD3. Python users might use uv or Conda. Other workflows might use CSD3 modules, compiled software, R, MATLAB, or field-specific tools.\nScheduling tools send work to compute nodes. Slurm is the scheduler, and sbatch is the command that submits a job. Most of this guide is about getting from “I have code” to “I can submit many clean units of work through Slurm.”\n\n\n\nThe main example uses a Python-heavy workflow: Python environment setup, notebook execution, and helper scripts for notebook-shaped jobs.\nThe transferable part is not Python or notebooks. The transferable part is:\n\nconnect to CSD3\nput code and inputs in a predictable project folder\nmake one unit of work runnable from the command line\nsubmit that unit through Slurm\nscale it with arrays or repeated submissions\nmonitor logs and sync outputs back\n\nOther workflows can use the same shape with a different command layer:\n\nR scripts run with Rscript\nMATLAB scripts or functions submitted through Slurm\nshell scripts\ncompiled programs\nsoftware loaded through CSD3 modules\nworkflow-specific tools for your field\n\nCSD3 has specific guidance for R and Rscript, MATLAB, modules, and Python.\n\n\n\nAdd a named host on your local machine:\nHost csd3-login\n  HostName login-cpu.hpc.cam.ac.uk\n  User &lt;your-crsid-or-username&gt;\nCheck plain SSH first:\nssh csd3-login\nIf plain SSH cannot connect, fix that before debugging VS Code.\n\n\n\nIn VS Code:\n\nInstall the Remote - SSH extension.\nOpen Remote Explorer.\nChoose csd3-login.\nComplete MFA if prompted.\nOpen the remote project folder, usually under ~/workspace/.\nUse the integrated terminal for CSD3 commands.\n\nCommands labeled “CSD3” in this guide run in that remote terminal.\n\n\n\nUse Login-Web when SSH or VS Code is unavailable. It gives shell access, so the CSD3 commands in this guide still apply.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#tool-roles",
-    "href": "workshop/01-tools-and-access.html#tool-roles",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "The tools fit into a few jobs in the workflow.\nAccess tools get you onto CSD3. VS Code Remote-SSH gives you a remote editor and terminal connected through SSH. Remote Explorer is the VS Code panel where saved SSH targets appear. Plain ssh gives you the same CSD3 shell in a normal terminal. Login-Web is the browser fallback when SSH tooling is not working.\nWhen VS Code is connected to CSD3, its integrated terminal is a CSD3 terminal, not a local Mac terminal.\nFile movement tools keep your local machine and CSD3 in sync. Git is for source code and deliberate small project changes. rsync is for generated inputs, large files, and outputs that should not be committed to Git.\nEnvironment tools make your command runnable on CSD3. Python users might use uv or Conda. Other workflows might use CSD3 modules, compiled software, R, MATLAB, or field-specific tools.\nScheduling tools send work to compute nodes. Slurm is the scheduler, and sbatch is the command that submits a job. Most of this guide is about getting from “I have code” to “I can submit many clean units of work through Slurm.”",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#demo-stack-and-other-stacks",
-    "href": "workshop/01-tools-and-access.html#demo-stack-and-other-stacks",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "The live demonstration uses a Python-heavy workflow because that is the example workflow: Python environment setup, notebook execution, and helper scripts for notebook-shaped jobs.\nThe transferable part is not Python or notebooks. The transferable part is:\n\nconnect to CSD3\nput code and inputs in a predictable project folder\nmake one unit of work runnable from the command line\nsubmit that unit through Slurm\nscale it with arrays or repeated submissions\nmonitor logs and sync outputs back\n\nOther workflows can use the same shape with a different command layer:\n\nR scripts run with Rscript\nMATLAB scripts or functions submitted through Slurm\nshell scripts\ncompiled programs\nsoftware loaded through CSD3 modules\nworkflow-specific tools for your field\n\nCSD3 has specific guidance for R and Rscript, MATLAB, modules, and Python.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#local-machine-ssh-config",
-    "href": "workshop/01-tools-and-access.html#local-machine-ssh-config",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "Add a named host on your local machine:\nHost csd3-login\n  HostName login-cpu.hpc.cam.ac.uk\n  User &lt;your-crsid-or-username&gt;\nCheck plain SSH first:\nssh csd3-login\nIf plain SSH cannot connect, fix that before debugging VS Code.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#local-machine-vs-code-remote-ssh",
-    "href": "workshop/01-tools-and-access.html#local-machine-vs-code-remote-ssh",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "In VS Code:\n\nInstall the Remote - SSH extension.\nOpen Remote Explorer.\nChoose csd3-login.\nComplete MFA if prompted.\nOpen the remote project folder, usually under ~/workspace/.\nUse the integrated terminal for CSD3 commands.\n\nCommands labeled “CSD3” in this guide run in that remote terminal.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#fallback-login-web",
-    "href": "workshop/01-tools-and-access.html#fallback-login-web",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "Use Login-Web when SSH or VS Code is unavailable. It gives shell access, so the CSD3 commands in this guide still apply.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
     ]
   },
   {
@@ -638,6 +253,83 @@
     ]
   },
   {
+    "objectID": "workshop/04-prepare-work-units.html",
+    "href": "workshop/04-prepare-work-units.html",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "Before using Slurm, make the repeated work explicit. A work unit is the thing one scheduled job should run: one subject, one input file, one simulation seed, one parameter setting, or one report.\nThis page is about preparing those units. It does not submit anything to Slurm.\n\n\nBefore submission, the full batch needs to be explicit: what units exist, and how one scheduled task identifies the unit it should run.\nOne common pattern is a single parametrizable runner plus a manifest:\nscripts/run_one_unit.py\njobs/manifest.txt\nThe runner knows how to process one unit. The manifest lists every unit in the batch. Later, each Slurm array task reads one manifest row.\nAnother pattern is one concrete file per unit:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/fitting_example_unit2.ipynb\nThat concrete-file pattern is heavier, but it can be useful for notebook workflows because each generated notebook is inspectable and can be resubmitted directly.\nThis repo’s notebook helper uses both ideas. It submits one rendered notebook per work unit, and submit_notebooks.sh builds a manifest of those notebook paths so each Slurm array task runs one file.\nThe two representations differ in what gets made before submission:\nRunner plus manifest:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  M[\"jobs/manifest.txt&lt;br/&gt;unit 0&lt;br/&gt;unit 1&lt;br/&gt;unit 2\"] --&gt; R[\"scripts/run_one_unit.py\"]\n\n\n\n\n\n\nConcrete file per unit:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  N0[\"rendered_unit0.ipynb\"]\n  N1[\"rendered_unit1.ipynb\"]\n  N2[\"rendered_unit2.ipynb\"]\n\n\n\n\n\n\n\n\n\nA prepared unit should make these choices explicit:\n\nwhich unit it runs\nwhich data or parameter files it reads\nwhere generated outputs are written\nwhich project code it imports or calls\nwhether it can run without prompts, clicks, or manual edits\n\nThe exact representation can differ. The useful habit is to make the batch explicit enough that a later submission command can select the right subset.\n\n\n\nThe main example uses prepared notebooks. The pattern is:\nmaintained notebook\n  -&gt; render concrete work units\n  -&gt; analyses/rendered/fitting_example_unit0.ipynb\n  -&gt; analyses/rendered/fitting_example_unit1.ipynb\n  -&gt; analyses/rendered/fitting_example_unit2.ipynb\nThe rendered notebooks are the files that get transferred to CSD3 and submitted later. Each rendered notebook should already know which unit it is responsible for and where its outputs should go.\n\n\n\nFor a notebook workflow, keep this distinction clear:\ntemplate/source notebook: the notebook you maintain by hand. It contains the code for the task and, if needed, parameters that can be filled in for one unit.\nrendered notebook: a concrete generated notebook for one work unit, written to a directory such as analyses/rendered/.\nSome projects keep separate source and template notebooks. Others use one maintained notebook as both the source and the template. The important distinction is between the maintained notebook you edit and the rendered notebooks you submit to CSD3.\n\n\n\nIn the notebook-helper pattern, preparation turns one maintained notebook into many concrete notebooks, one per work unit. This is where the full batch becomes visible before anything is submitted to Slurm.\nPapermill can execute notebooks from the command line and can also be used by a project-specific renderer to create prepared notebooks.\nMany projects use a flag such as prepare_only=True for this step: create the rendered notebooks, but do not run the expensive computation yet.\nOne generic rendering command might look like:\ncd \"$HOME/workspace/my_project\"\npapermill analyses/render_work_units.ipynb \\\n  analyses/render_work_units.ipynb \\\n  --progress-bar\nThe important output is the prepared set:\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | sort | head\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | wc -l\nFor rendered notebooks, the unit identity often appears in the filename:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/analysis_example.ipynb\n\n\n\nFor R, MATLAB, shell, or compiled workflows, the prepared unit may not be a notebook. These workflows often use the parametrizable runner plus manifest pattern:\n\none row in a manifest\none parameter file\none shell script plus arguments\none command that takes an input path and output path\n\nThe same rule still applies: prepare a batch of explicit units first. Later pages replace “rendered notebook” with your prepared script, manifest row, or input file.",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#two-ways-to-represent-the-batch",
+    "href": "workshop/04-prepare-work-units.html#two-ways-to-represent-the-batch",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "Before submission, the full batch needs to be explicit: what units exist, and how one scheduled task identifies the unit it should run.\nOne common pattern is a single parametrizable runner plus a manifest:\nscripts/run_one_unit.py\njobs/manifest.txt\nThe runner knows how to process one unit. The manifest lists every unit in the batch. Later, each Slurm array task reads one manifest row.\nAnother pattern is one concrete file per unit:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/fitting_example_unit2.ipynb\nThat concrete-file pattern is heavier, but it can be useful for notebook workflows because each generated notebook is inspectable and can be resubmitted directly.\nThis repo’s notebook helper uses both ideas. It submits one rendered notebook per work unit, and submit_notebooks.sh builds a manifest of those notebook paths so each Slurm array task runs one file.\nThe two representations differ in what gets made before submission:\nRunner plus manifest:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  M[\"jobs/manifest.txt&lt;br/&gt;unit 0&lt;br/&gt;unit 1&lt;br/&gt;unit 2\"] --&gt; R[\"scripts/run_one_unit.py\"]\n\n\n\n\n\n\nConcrete file per unit:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  N0[\"rendered_unit0.ipynb\"]\n  N1[\"rendered_unit1.ipynb\"]\n  N2[\"rendered_unit2.ipynb\"]",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#what-a-prepared-unit-should-contain",
+    "href": "workshop/04-prepare-work-units.html#what-a-prepared-unit-should-contain",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "A prepared unit should make these choices explicit:\n\nwhich unit it runs\nwhich data or parameter files it reads\nwhere generated outputs are written\nwhich project code it imports or calls\nwhether it can run without prompts, clicks, or manual edits\n\nThe exact representation can differ. The useful habit is to make the batch explicit enough that a later submission command can select the right subset.",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#notebook-helper-pattern",
+    "href": "workshop/04-prepare-work-units.html#notebook-helper-pattern",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "The main example uses prepared notebooks. The pattern is:\nmaintained notebook\n  -&gt; render concrete work units\n  -&gt; analyses/rendered/fitting_example_unit0.ipynb\n  -&gt; analyses/rendered/fitting_example_unit1.ipynb\n  -&gt; analyses/rendered/fitting_example_unit2.ipynb\nThe rendered notebooks are the files that get transferred to CSD3 and submitted later. Each rendered notebook should already know which unit it is responsible for and where its outputs should go.",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#maintained-and-rendered-notebooks",
+    "href": "workshop/04-prepare-work-units.html#maintained-and-rendered-notebooks",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "For a notebook workflow, keep this distinction clear:\ntemplate/source notebook: the notebook you maintain by hand. It contains the code for the task and, if needed, parameters that can be filled in for one unit.\nrendered notebook: a concrete generated notebook for one work unit, written to a directory such as analyses/rendered/.\nSome projects keep separate source and template notebooks. Others use one maintained notebook as both the source and the template. The important distinction is between the maintained notebook you edit and the rendered notebooks you submit to CSD3.",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#generate-the-prepared-work-units",
+    "href": "workshop/04-prepare-work-units.html#generate-the-prepared-work-units",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "In the notebook-helper pattern, preparation turns one maintained notebook into many concrete notebooks, one per work unit. This is where the full batch becomes visible before anything is submitted to Slurm.\nPapermill can execute notebooks from the command line and can also be used by a project-specific renderer to create prepared notebooks.\nMany projects use a flag such as prepare_only=True for this step: create the rendered notebooks, but do not run the expensive computation yet.\nOne generic rendering command might look like:\ncd \"$HOME/workspace/my_project\"\npapermill analyses/render_work_units.ipynb \\\n  analyses/render_work_units.ipynb \\\n  --progress-bar\nThe important output is the prepared set:\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | sort | head\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | wc -l\nFor rendered notebooks, the unit identity often appears in the filename:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/analysis_example.ipynb",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
+    "objectID": "workshop/04-prepare-work-units.html#other-workflows",
+    "href": "workshop/04-prepare-work-units.html#other-workflows",
+    "title": "Prepare Work Units",
+    "section": "",
+    "text": "For R, MATLAB, shell, or compiled workflows, the prepared unit may not be a notebook. These workflows often use the parametrizable runner plus manifest pattern:\n\none row in a manifest\none parameter file\none shell script plus arguments\none command that takes an input path and output path\n\nThe same rule still applies: prepare a batch of explicit units first. Later pages replace “rendered notebook” with your prepared script, manifest row, or input file.",
+    "crumbs": [
+      "Start",
+      "Prepare Work Units"
+    ]
+  },
+  {
     "objectID": "workshop/05-transfer-files.html",
     "href": "workshop/05-transfer-files.html",
     "title": "Transfer Files With rsync And Git",
@@ -649,8 +341,8 @@
     ]
   },
   {
-    "objectID": "workshop/05-transfer-files.html#what-rsync-is-for",
-    "href": "workshop/05-transfer-files.html#what-rsync-is-for",
+    "objectID": "workshop/05-transfer-files.html#file-transfer-with-rsync",
+    "href": "workshop/05-transfer-files.html#file-transfer-with-rsync",
     "title": "Transfer Files With rsync And Git",
     "section": "",
     "text": "Use rsync for files that need to move but should not necessarily become Git history:\n\nrendered notebooks in analyses/rendered/\ninput files\ngenerated outputs\nexecuted notebooks\nlarge or temporary files\n\nrsync works in both directions. The direction is determined by which path is first.\nLocal to CSD3:\nlocal_path/  cluster:path/\nCSD3 to local:\ncluster:path/  local_path/\nThe trailing slash means “copy the contents of this directory.”",
@@ -726,11 +418,99 @@
     ]
   },
   {
+    "objectID": "workshop/06-run-one-slurm-job.html",
+    "href": "workshop/06-run-one-slurm-job.html",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "Before submitting a whole batch, run one scheduled job. This is sometimes called a smoke test, but the teaching goal here is more specific: understand what one Slurm job is made of.\nThe main example uses one prepared notebook and this repo’s notebook runner.\n\n\nOne notebook-helper job involves these files:\n\none prepared notebook, such as analyses/rendered/fitting_example_unit0.ipynb\nrun_notebook.sbatch, the Slurm job script\ncluster_env.sh, the environment activation script\na runs/ directory for stdout and stderr logs\nwhatever output files the notebook writes\n\nThe prepared notebook is the unit of work. The sbatch file tells Slurm how to run that unit on a compute node.\nOne scheduled job ties together the prepared unit, job script, environment, and generated artifacts:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"prepared unit&lt;br/&gt;notebook, script, or input\"] --&gt; C[\"Slurm job\"]\n  B[\"job script&lt;br/&gt;resources + command\"] --&gt; C\n  D[\"cluster_env.sh&lt;br/&gt;software setup\"] --&gt; C\n  C --&gt; E[\"compute node\"]\n  E --&gt; F[\"stdout log\"]\n  E --&gt; G[\"stderr log\"]\n  E --&gt; H[\"output artifact\"]\n\n\n\n\n\n\n\n\n\nrun_notebook.sbatch is the notebook runner for this repo. The top of the file contains the Slurm resource settings:\n#SBATCH --job-name=nb\n#SBATCH -A TALMI-SL3-CPU\n#SBATCH -p icelake-himem\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --time=12:00:00\n#SBATCH --mem=16G\n#SBATCH --cpus-per-task=1\nThose lines choose the job name, account, partition, walltime, memory, and CPU count. For your own project, the account and resource requests need to match the allocation and workload you are using.\nThe rest of the script does the repeatable setup:\n\nresolves the notebook path\nfinds the project root by walking up to the nearest .git directory\nchanges into the project directory\nsources $HOME/workspace/cluster_env.sh\nsets thread-related environment variables from the Slurm CPU request\nruns Papermill on the notebook\n\nFor a single job, the notebook path is passed as an argument. For an array job later, the script reads the notebook path from a manifest line.\n\n\n\nRun this from a CSD3 terminal:\nmkdir -p \"$HOME/workspace/my_project/runs\"\ncd \"$HOME/workspace/sbatch\"\n\nsbatch \\\n  --output \"$HOME/workspace/my_project/runs/single_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/single_%j.err\" \\\n  run_notebook.sbatch \\\n  \"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\nThe sbatch command prints a job ID. Slurm queues the work and later runs it on a compute node.\nThe %j in the log paths is replaced by the Slurm job ID.\n\n\n\nsqueue -u \"$USER\"\nJobs usually disappear from squeue after they finish. That does not mean the job failed; it means you should inspect the logs and outputs.\n\n\n\nSINGLE_OUT=\"$(ls -t \"$HOME/workspace/my_project/runs\"/single_*.out | head -1)\"\nSINGLE_ERR=\"${SINGLE_OUT%.out}.err\"\n\nsed -n '1,200p' \"$SINGLE_OUT\"\nsed -n '1,200p' \"$SINGLE_ERR\"\nThe .out file should show the script starting and finishing the notebook. The .err file is where missing files, missing commands, import errors, and tracebacks usually appear.\n\n\n\nFor this notebook runner, Papermill writes the executed notebook back to the same path:\n~/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\nYour notebook may also write generated files to folders such as outputs/, fits/, figures/, or reports/.\n\n\n\nFor R, MATLAB, shell, or compiled workflows, the prepared unit may be a script, manifest row, or input file instead of a notebook. The one-job anatomy is still the same:\n\none prepared unit\none sbatch script or sbatch --wrap command\nresource settings\nenvironment activation\nstdout and stderr logs\ngenerated output files\n\nOnce one scheduled job is understandable, the next step is scaling the same shape to the full batch.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#the-files-in-one-job",
+    "href": "workshop/06-run-one-slurm-job.html#the-files-in-one-job",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "One notebook-helper job involves these files:\n\none prepared notebook, such as analyses/rendered/fitting_example_unit0.ipynb\nrun_notebook.sbatch, the Slurm job script\ncluster_env.sh, the environment activation script\na runs/ directory for stdout and stderr logs\nwhatever output files the notebook writes\n\nThe prepared notebook is the unit of work. The sbatch file tells Slurm how to run that unit on a compute node.\nOne scheduled job ties together the prepared unit, job script, environment, and generated artifacts:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"prepared unit&lt;br/&gt;notebook, script, or input\"] --&gt; C[\"Slurm job\"]\n  B[\"job script&lt;br/&gt;resources + command\"] --&gt; C\n  D[\"cluster_env.sh&lt;br/&gt;software setup\"] --&gt; C\n  C --&gt; E[\"compute node\"]\n  E --&gt; F[\"stdout log\"]\n  E --&gt; G[\"stderr log\"]\n  E --&gt; H[\"output artifact\"]",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#what-the-notebook-runner-provides",
+    "href": "workshop/06-run-one-slurm-job.html#what-the-notebook-runner-provides",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "run_notebook.sbatch is the notebook runner for this repo. The top of the file contains the Slurm resource settings:\n#SBATCH --job-name=nb\n#SBATCH -A TALMI-SL3-CPU\n#SBATCH -p icelake-himem\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --time=12:00:00\n#SBATCH --mem=16G\n#SBATCH --cpus-per-task=1\nThose lines choose the job name, account, partition, walltime, memory, and CPU count. For your own project, the account and resource requests need to match the allocation and workload you are using.\nThe rest of the script does the repeatable setup:\n\nresolves the notebook path\nfinds the project root by walking up to the nearest .git directory\nchanges into the project directory\nsources $HOME/workspace/cluster_env.sh\nsets thread-related environment variables from the Slurm CPU request\nruns Papermill on the notebook\n\nFor a single job, the notebook path is passed as an argument. For an array job later, the script reads the notebook path from a manifest line.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#csd3-submit-one-prepared-notebook",
+    "href": "workshop/06-run-one-slurm-job.html#csd3-submit-one-prepared-notebook",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "Run this from a CSD3 terminal:\nmkdir -p \"$HOME/workspace/my_project/runs\"\ncd \"$HOME/workspace/sbatch\"\n\nsbatch \\\n  --output \"$HOME/workspace/my_project/runs/single_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/single_%j.err\" \\\n  run_notebook.sbatch \\\n  \"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\nThe sbatch command prints a job ID. Slurm queues the work and later runs it on a compute node.\nThe %j in the log paths is replaced by the Slurm job ID.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#csd3-watch-queue-state",
+    "href": "workshop/06-run-one-slurm-job.html#csd3-watch-queue-state",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "squeue -u \"$USER\"\nJobs usually disappear from squeue after they finish. That does not mean the job failed; it means you should inspect the logs and outputs.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-logs",
+    "href": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-logs",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "SINGLE_OUT=\"$(ls -t \"$HOME/workspace/my_project/runs\"/single_*.out | head -1)\"\nSINGLE_ERR=\"${SINGLE_OUT%.out}.err\"\n\nsed -n '1,200p' \"$SINGLE_OUT\"\nsed -n '1,200p' \"$SINGLE_ERR\"\nThe .out file should show the script starting and finishing the notebook. The .err file is where missing files, missing commands, import errors, and tracebacks usually appear.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-output-artifact",
+    "href": "workshop/06-run-one-slurm-job.html#csd3-inspect-the-output-artifact",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "For this notebook runner, Papermill writes the executed notebook back to the same path:\n~/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\nYour notebook may also write generated files to folders such as outputs/, fits/, figures/, or reports/.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
+    "objectID": "workshop/06-run-one-slurm-job.html#adaptation-notes",
+    "href": "workshop/06-run-one-slurm-job.html#adaptation-notes",
+    "title": "Run One Slurm Job",
+    "section": "",
+    "text": "For R, MATLAB, shell, or compiled workflows, the prepared unit may be a script, manifest row, or input file instead of a notebook. The one-job anatomy is still the same:\n\none prepared unit\none sbatch script or sbatch --wrap command\nresource settings\nenvironment activation\nstdout and stderr logs\ngenerated output files\n\nOnce one scheduled job is understandable, the next step is scaling the same shape to the full batch.",
+    "crumbs": [
+      "Start",
+      "Run One Slurm Job"
+    ]
+  },
+  {
     "objectID": "workshop/07-submit-the-batch.html",
     "href": "workshop/07-submit-the-batch.html",
     "title": "Submit The Batch",
     "section": "",
-    "text": "After one scheduled job works, submit the full prepared set.\nIn the notebook-helper workflow, the batch is:\none directory of prepared notebooks\none filename pattern selecting the notebooks to run\none Slurm array with one task per notebook\n\n\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\"\nTo limit how many tasks run at the same time, pass a throttle:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\" \\\n  50\nThe throttle does not change how many units are submitted. It only limits concurrent running tasks.\n\n\n\nsubmit_notebooks.sh does several things:\n\nfinds matching notebooks in the prepared directory\nwrites a run directory under the project, such as runs/&lt;run_id&gt;/\nwrites manifest.txt, one notebook path per line\nsubmits a Slurm array using run_notebook.sbatch\nwrites stdout and stderr logs under runs/&lt;run_id&gt;/logs/\nrecords Slurm submission output in submission.txt\n\nInspect the newest run:\ncd \"$HOME/workspace/my_project\"\nRUN_DIR=\"$(ls -td runs/* | head -1)\"\n\nprintf '%s\\n' \"$RUN_DIR\"\nsed -n '1,20p' \"$RUN_DIR/manifest.txt\"\ncat \"$RUN_DIR/submission.txt\"\nfind \"$RUN_DIR/logs\" -maxdepth 1 -type f | sort | head\n\n\n\nA Slurm array repeats the same job script many times. Each task gets a task index.\nIn this repo, the helper passes a manifest to run_notebook.sbatch. Each array task uses its task index to choose one line from the manifest.\ntask 0 -&gt; manifest line 1 -&gt; first notebook\ntask 1 -&gt; manifest line 2 -&gt; second notebook\ntask 2 -&gt; manifest line 3 -&gt; third notebook\nThe array job is the scheduler mechanism. The manifest is the list of prepared work units.\nCSD3’s official batch-job examples include sample submission scripts and array jobs.\n\n\n\nArray logs include both the array job ID and the task index:\nruns/&lt;run_id&gt;/logs/nb_&lt;array_job_id&gt;_&lt;task_id&gt;.out\nruns/&lt;run_id&gt;/logs/nb_&lt;array_job_id&gt;_&lt;task_id&gt;.err\nThat is how one failed task can be traced back to one prepared notebook.\n\n\n\nFor non-notebook workflows, the same batch structure still applies:\n\nwrite a manifest with one unit per line\nsubmit a Slurm array\nuse SLURM_ARRAY_TASK_ID to select one line\nwrite one log pair per task\n\nThe difference is the runner. Instead of run_notebook.sbatch, your project may use an sbatch script that calls Rscript, matlab, a shell pipeline, or a compiled executable.",
+    "text": "After one scheduled job works, submit the full prepared set.\nIn the notebook-helper workflow, the batch is:\none directory of prepared notebooks\none filename pattern selecting the notebooks to run\none Slurm array with one task per notebook\n\n\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\"\nTo limit how many tasks run at the same time, pass a throttle:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"fitting_*_unit*.ipynb\" \\\n  50\nThe throttle does not change how many units are submitted. It only limits concurrent running tasks.\n\n\n\nsubmit_notebooks.sh does several things:\n\nfinds matching notebooks in the prepared directory\nwrites a run directory under the project, such as runs/&lt;run_id&gt;/\nwrites manifest.txt, one notebook path per line\nsubmits a Slurm array using run_notebook.sbatch\nwrites stdout and stderr logs under runs/&lt;run_id&gt;/logs/\nrecords Slurm submission output in submission.txt\n\nInspect the newest run:\ncd \"$HOME/workspace/my_project\"\nRUN_DIR=\"$(ls -td runs/* | head -1)\"\n\nprintf '%s\\n' \"$RUN_DIR\"\nsed -n '1,20p' \"$RUN_DIR/manifest.txt\"\ncat \"$RUN_DIR/submission.txt\"\nfind \"$RUN_DIR/logs\" -maxdepth 1 -type f | sort | head\n\n\n\nA Slurm array repeats the same job script many times. Each task gets a task index.\nIn this repo, the helper passes a manifest to run_notebook.sbatch. Each array task uses its task index to choose one line from the manifest.\nThe array job is the scheduler mechanism. The manifest is the list of prepared work units. The important detail is the offset: Slurm array task IDs start at 0, while manifest line numbers start at 1.\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  T0[\"array task 0\"] -- \"reads line 1\" --&gt; U0[\"unit A\"]\n  T1[\"array task 1\"] -- \"reads line 2\" --&gt; U1[\"unit B\"]\n  T2[\"array task 2\"] -- \"reads line 3\" --&gt; U2[\"unit C\"]\n\n\n\n\n\n\nCSD3’s official batch-job examples include sample submission scripts and array jobs.\n\n\n\nArray logs include both the array job ID and the task index:\nruns/&lt;run_id&gt;/logs/nb_&lt;array_job_id&gt;_&lt;task_id&gt;.out\nruns/&lt;run_id&gt;/logs/nb_&lt;array_job_id&gt;_&lt;task_id&gt;.err\nThat is how one failed task can be traced back to one prepared notebook.\n\n\n\nFor non-notebook workflows, the same batch structure still applies:\n\nwrite a manifest with one unit per line\nsubmit a Slurm array\nuse SLURM_ARRAY_TASK_ID to select one line\nwrite one log pair per task\n\nThe difference is the runner. Instead of run_notebook.sbatch, your project may use an sbatch script that calls Rscript, matlab, a shell pipeline, or a compiled executable.",
     "crumbs": [
       "Start",
       "Submit The Batch"
@@ -763,7 +543,7 @@
     "href": "workshop/07-submit-the-batch.html#what-a-slurm-array-adds",
     "title": "Submit The Batch",
     "section": "",
-    "text": "A Slurm array repeats the same job script many times. Each task gets a task index.\nIn this repo, the helper passes a manifest to run_notebook.sbatch. Each array task uses its task index to choose one line from the manifest.\ntask 0 -&gt; manifest line 1 -&gt; first notebook\ntask 1 -&gt; manifest line 2 -&gt; second notebook\ntask 2 -&gt; manifest line 3 -&gt; third notebook\nThe array job is the scheduler mechanism. The manifest is the list of prepared work units.\nCSD3’s official batch-job examples include sample submission scripts and array jobs.",
+    "text": "A Slurm array repeats the same job script many times. Each task gets a task index.\nIn this repo, the helper passes a manifest to run_notebook.sbatch. Each array task uses its task index to choose one line from the manifest.\nThe array job is the scheduler mechanism. The manifest is the list of prepared work units. The important detail is the offset: Slurm array task IDs start at 0, while manifest line numbers start at 1.\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  T0[\"array task 0\"] -- \"reads line 1\" --&gt; U0[\"unit A\"]\n  T1[\"array task 1\"] -- \"reads line 2\" --&gt; U1[\"unit B\"]\n  T2[\"array task 2\"] -- \"reads line 3\" --&gt; U2[\"unit C\"]\n\n\n\n\n\n\nCSD3’s official batch-job examples include sample submission scripts and array jobs.",
     "crumbs": [
       "Start",
       "Submit The Batch"
@@ -789,380 +569,6 @@
     "crumbs": [
       "Start",
       "Submit The Batch"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html",
-    "href": "workshop/09-monitor-and-recover.html",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "After submission, your job is to decide whether the run is progressing, done, or failing in a way that needs intervention.\nUse Slurm for queue state and logs for actual error details.\n\n\nsqueue -u \"$USER\"\nsqueue shows jobs that are pending or running. Finished jobs usually disappear from squeue.\nFor accounting state after jobs finish:\nsacct -j &lt;job_id&gt; --format=JobID,JobName,State,Elapsed,ExitCode\n\n\n\ncd \"$HOME/workspace/my_project\"\nls -lt runs | head\nInspect the start of a log:\nsed -n '1,200p' runs/&lt;log_file&gt;.err\nFor array jobs, task logs often include the array job ID and task index:\nbatch_&lt;array_job_id&gt;_&lt;task_id&gt;.err\n\n\n\nIf you submitted notebooks with this repo:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/check_run.sh\"\n\"$HOME/workspace/sbatch/check_run.sh\" -v\nFor a specific run:\n\"$HOME/workspace/sbatch/check_run.sh\" \"$HOME/workspace/my_project/runs/&lt;run_id&gt;\"\n\n\n\nFor notebook jobs, the notebook itself is also a progress artifact. While a job is running, you can open the prepared notebook on CSD3 and inspect which cells have executed, what output has appeared, and whether a traceback has already been written.\nIn VS Code Remote-SSH, open the notebook path shown by check_run.sh -v. Refresh or reopen the notebook if the view does not update while the job is running.\nYou can also inspect the notebook file from the terminal:\nNOTEBOOK=\"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\n\npython - \"$NOTEBOOK\" &lt;&lt;'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\npath = Path(sys.argv[1])\nnb = json.loads(path.read_text())\ncode_cells = [cell for cell in nb[\"cells\"] if cell.get(\"cell_type\") == \"code\"]\nexecuted = [cell for cell in code_cells if cell.get(\"execution_count\") is not None]\nerrors = []\nfor index, cell in enumerate(code_cells, 1):\n    for output in cell.get(\"outputs\", []):\n        if output.get(\"output_type\") == \"error\":\n            errors.append((index, output.get(\"ename\", \"error\")))\n\nprint(f\"{len(executed)}/{len(code_cells)} code cells executed\")\nfor index, error in errors:\n    print(f\"cell {index}: {error}\")\nPY\nLong-running jobs should also write progress output. In Python, tqdm is a good default for loops. For other tools, use the equivalent progress meter or regular stdout messages. Progress output makes the .out log and the executed notebook more useful while the job is still running.\n\n\n\nAn isolated task failure can be transient. If one or two tasks fail and the error does not point to source, data, or environment problems, resubmission may be reasonable.\nIf many tasks fail the same way, treat it as structural. Fix the code, inputs, paths, or environment before resubmitting.\n\n\n\nFor failed notebook tasks from the newest run:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/resubmit_failed.sh\"\nWith a follow-up script:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/resubmit_failed.sh\" \\\n  --sentinel \"$HOME/workspace/my_project/scripts/after_jobs.sh\"\n\n\n\nBefore resubmitting, you should be able to explain why resubmission is appropriate. If the explanation is “the code was wrong,” fix and retest first.\nDo not repeatedly resubmit the same structural failure. The scheduler will keep reproducing the same error because the job input and environment have not changed.",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#csd3-queue-state",
-    "href": "workshop/09-monitor-and-recover.html#csd3-queue-state",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "squeue -u \"$USER\"\nsqueue shows jobs that are pending or running. Finished jobs usually disappear from squeue.\nFor accounting state after jobs finish:\nsacct -j &lt;job_id&gt; --format=JobID,JobName,State,Elapsed,ExitCode",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#csd3-inspect-logs",
-    "href": "workshop/09-monitor-and-recover.html#csd3-inspect-logs",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "cd \"$HOME/workspace/my_project\"\nls -lt runs | head\nInspect the start of a log:\nsed -n '1,200p' runs/&lt;log_file&gt;.err\nFor array jobs, task logs often include the array job ID and task index:\nbatch_&lt;array_job_id&gt;_&lt;task_id&gt;.err",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#notebook-helper-run-summary",
-    "href": "workshop/09-monitor-and-recover.html#notebook-helper-run-summary",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "If you submitted notebooks with this repo:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/check_run.sh\"\n\"$HOME/workspace/sbatch/check_run.sh\" -v\nFor a specific run:\n\"$HOME/workspace/sbatch/check_run.sh\" \"$HOME/workspace/my_project/runs/&lt;run_id&gt;\"",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#transient-vs-structural-failures",
-    "href": "workshop/09-monitor-and-recover.html#transient-vs-structural-failures",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "An isolated task failure can be transient. If one or two tasks fail and the error does not point to source, data, or environment problems, resubmission may be reasonable.\nIf many tasks fail the same way, treat it as structural. Fix the code, inputs, paths, or environment before resubmitting.",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#notebook-helper-resubmission",
-    "href": "workshop/09-monitor-and-recover.html#notebook-helper-resubmission",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "For failed notebook tasks from the newest run:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/resubmit_failed.sh\"\nWith a follow-up script:\ncd \"$HOME/workspace/my_project\"\n\"$HOME/workspace/sbatch/resubmit_failed.sh\" \\\n  --sentinel \"$HOME/workspace/my_project/scripts/after_jobs.sh\"",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#before-resubmitting",
-    "href": "workshop/09-monitor-and-recover.html#before-resubmitting",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "Before resubmitting, you should be able to explain why resubmission is appropriate. If the explanation is “the code was wrong,” fix and retest first.\nDo not repeatedly resubmit the same structural failure. The scheduler will keep reproducing the same error because the job input and environment have not changed.",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html",
-    "href": "workshop/11-focused-reruns.html",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "You rarely need to rerun everything. A focused rerun refreshes only one subset of jobs and only the outputs that depend on them.\nThis usually comes after monitoring, log inspection, or local review has told you which subset is stale, failed, or affected by a change.\nIt is useful after a code change, a failed subset, a new parameter setting, or a corrected input file.\n\n\nCreate a narrow file pattern for prepared notebooks:\ncd \"$HOME/workspace/my_project\"\nfind analyses/rendered -maxdepth 1 -type f -name \"*target*.ipynb\" | sort\nFor a manifest-based script workflow, create a narrow manifest instead:\nmkdir -p jobs\nfind inputs -maxdepth 1 -type f -name \"*target*.json\" | sort &gt; jobs/manifest_target.txt\n\n\n\nOnly remove outputs for the target subset:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f -name \"*target*\" -delete\nfind figures -type f -name \"*target*\" -delete\nDo not delete the prepared work units you are about to submit.\n\n\n\nFor notebook jobs:\ncd \"$HOME/workspace/sbatch\"\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"*target*.ipynb\" \\\n  25\nFor a manifest-based script workflow:\nCOUNT=\"$(wc -l &lt; \"$HOME/workspace/my_project/jobs/manifest_target.txt\")\"\n\nsbatch \\\n  --job-name=target \\\n  --array \"0-$((COUNT - 1))%25\" \\\n  --output \"$HOME/workspace/my_project/runs/target_%A_%a.out\" \\\n  --error \"$HOME/workspace/my_project/runs/target_%A_%a.err\" \\\n  \"$HOME/workspace/my_project/scripts/run_from_manifest.sh\" \\\n  \"$HOME/workspace/my_project/jobs/manifest_target.txt\"\n\n\n\ncd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\n\nrsync -av --progress --prune-empty-dirs \\\n  --include='*/' \\\n  --include='*target*' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\n\n\n\nIf you temporarily narrowed a config file, restore it before running aggregate summaries:\ngit status --short\nThen rerun any summaries that depend on the refreshed outputs.\n\n\n\nA focused rerun is complete only when the temporary selection has been restored or clearly recorded. Otherwise future summaries may accidentally use the narrow configuration.\nFocused reruns are easy to mix with stale outputs. Clear only the target outputs, submit only the target jobs, and sync only matching results back.",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#focus-the-inputs",
-    "href": "workshop/11-focused-reruns.html#focus-the-inputs",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "Create a narrow file pattern for prepared notebooks:\ncd \"$HOME/workspace/my_project\"\nfind analyses/rendered -maxdepth 1 -type f -name \"*target*.ipynb\" | sort\nFor a manifest-based script workflow, create a narrow manifest instead:\nmkdir -p jobs\nfind inputs -maxdepth 1 -type f -name \"*target*.json\" | sort &gt; jobs/manifest_target.txt",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#clear-stale-target-outputs",
-    "href": "workshop/11-focused-reruns.html#clear-stale-target-outputs",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "Only remove outputs for the target subset:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f -name \"*target*\" -delete\nfind figures -type f -name \"*target*\" -delete\nDo not delete the prepared work units you are about to submit.",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#submit-the-narrow-batch",
-    "href": "workshop/11-focused-reruns.html#submit-the-narrow-batch",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "For notebook jobs:\ncd \"$HOME/workspace/sbatch\"\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"*target*.ipynb\" \\\n  25\nFor a manifest-based script workflow:\nCOUNT=\"$(wc -l &lt; \"$HOME/workspace/my_project/jobs/manifest_target.txt\")\"\n\nsbatch \\\n  --job-name=target \\\n  --array \"0-$((COUNT - 1))%25\" \\\n  --output \"$HOME/workspace/my_project/runs/target_%A_%a.out\" \\\n  --error \"$HOME/workspace/my_project/runs/target_%A_%a.err\" \\\n  \"$HOME/workspace/my_project/scripts/run_from_manifest.sh\" \\\n  \"$HOME/workspace/my_project/jobs/manifest_target.txt\"",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#bring-matching-outputs-back",
-    "href": "workshop/11-focused-reruns.html#bring-matching-outputs-back",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "cd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\n\nrsync -av --progress --prune-empty-dirs \\\n  --include='*/' \\\n  --include='*target*' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#restore-any-temporary-configuration",
-    "href": "workshop/11-focused-reruns.html#restore-any-temporary-configuration",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "If you temporarily narrowed a config file, restore it before running aggregate summaries:\ngit status --short\nThen rerun any summaries that depend on the refreshed outputs.",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "workshop/11-focused-reruns.html#restore-the-full-workflow",
-    "href": "workshop/11-focused-reruns.html#restore-the-full-workflow",
-    "title": "Focused Reruns",
-    "section": "",
-    "text": "A focused rerun is complete only when the temporary selection has been restored or clearly recorded. Otherwise future summaries may accidentally use the narrow configuration.\nFocused reruns are easy to mix with stale outputs. Clear only the target outputs, submit only the target jobs, and sync only matching results back.",
-    "crumbs": [
-      "Start",
-      "Focused Reruns"
-    ]
-  },
-  {
-    "objectID": "index.html#what-this-guide-helps-you-do",
-    "href": "index.html#what-this-guide-helps-you-do",
-    "title": "Remote Cluster Computing For Research Workflows",
-    "section": "",
-    "text": "This guide helps you:\n\nexplain where work happens on the local Mac, CSD3 login node, and CSD3 compute nodes\nuse VS Code Remote-SSH as the main interface to CSD3\nrecognize workloads that fit a cluster well\nprepare self-contained work units from scripts, manifests, notebooks, or command-line tools\nmove source code, prepared inputs, and generated outputs deliberately\nrun one Slurm job before scaling up\nsubmit batches and job arrays through Slurm\ninspect queues, logs, and failure states\nrecover transient failures without masking structural problems\nsync generated results back for local inspection or summaries",
-    "crumbs": [
-      "Start",
-      "Remote Cluster Computing For Research Workflows"
-    ]
-  },
-  {
-    "objectID": "index.html#suggested-path",
-    "href": "index.html#suggested-path",
-    "title": "Remote Cluster Computing For Research Workflows",
-    "section": "",
-    "text": "Read the pages in order for a complete workflow:\n\nOrientation. Which workloads belong on a cluster.\nTools and access. VS Code Remote-SSH, SSH, and Login-Web fallback.\nEnvironment setup. ~/workspace, software environment, and allocation checks.\nWorkflow map. Prepare, transfer, submit, monitor, recover, transfer back.\nPrepare work units. Rendered notebooks, scripts, and self-contained inputs.\nTransfer files. rsync for files, Git for source code.\nRun one Slurm job, then submit the batch.\nMonitor and recover. squeue, logs, stderr, and resubmission.\nFollow-up jobs. Sentinels, dependencies, and downstream work.\nPost-process or bring results back. Decide what stays on CSD3 and what comes home.\nFocused reruns. Rerun only the stale, failed, or changed subset.\n\nThe same sequence can support a quick walkthrough or self-guided reference.",
-    "crumbs": [
-      "Start",
-      "Remote Cluster Computing For Research Workflows"
-    ]
-  },
-  {
-    "objectID": "index.html#notebook-helper-scripts",
-    "href": "index.html#notebook-helper-scripts",
-    "title": "Remote Cluster Computing For Research Workflows",
-    "section": "",
-    "text": "This repo also contains a small notebook execution layer. These scripts are useful when a project has already prepared concrete notebook work units, such as files under analyses/rendered/.\n\nrun_notebook.sbatch: Slurm job script that runs one prepared notebook with Papermill. It can run a single notebook path directly, or read one notebook path from a manifest when used in an array.\nsubmit_notebooks.sh: builds a manifest from a notebook directory and filename pattern, creates a runs/&lt;run_id&gt;/ directory, submits the Slurm array, and can attach a project-specific sentinel script.\ncheck_run.sh: summarizes a run directory using Slurm accounting state and can show per-task notebook and stderr paths with -v.\nresubmit_failed.sh: finds failed notebook tasks from a run, copies them into a rerun directory, and resubmits only those failed tasks.\n\nThat is the complete set of reusable root helper scripts. Follow-up sentinel scripts are project-specific and live in the project that needs them. The guide also shows how the same Slurm pattern adapts to scripts, manifests, and other command-line work.\nFor project-side examples, see examples/project-scripts. Those files show how a project can merge per-unit outputs and submit downstream notebook batches after the root helper scripts finish.",
-    "crumbs": [
-      "Start",
-      "Remote Cluster Computing For Research Workflows"
-    ]
-  },
-  {
-    "objectID": "workshop/01-tools-and-access.html#example-stack-and-other-stacks",
-    "href": "workshop/01-tools-and-access.html#example-stack-and-other-stacks",
-    "title": "Tools And Access",
-    "section": "",
-    "text": "The main example uses a Python-heavy workflow: Python environment setup, notebook execution, and helper scripts for notebook-shaped jobs.\nThe transferable part is not Python or notebooks. The transferable part is:\n\nconnect to CSD3\nput code and inputs in a predictable project folder\nmake one unit of work runnable from the command line\nsubmit that unit through Slurm\nscale it with arrays or repeated submissions\nmonitor logs and sync outputs back\n\nOther workflows can use the same shape with a different command layer:\n\nR scripts run with Rscript\nMATLAB scripts or functions submitted through Slurm\nshell scripts\ncompiled programs\nsoftware loaded through CSD3 modules\nworkflow-specific tools for your field\n\nCSD3 has specific guidance for R and Rscript, MATLAB, modules, and Python.",
-    "crumbs": [
-      "Start",
-      "Tools And Access"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#maintained-and-rendered-notebooks",
-    "href": "workshop/04-prepare-work-units.html#maintained-and-rendered-notebooks",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "For a notebook workflow, keep this distinction clear:\ntemplate/source notebook: the notebook you maintain by hand. It contains the code for the task and, if needed, parameters that can be filled in for one unit.\nrendered notebook: a concrete generated notebook for one work unit, written to a directory such as analyses/rendered/.\nSome projects keep separate source and template notebooks. Others use one maintained notebook as both the source and the template. The important distinction is between the maintained notebook you edit and the rendered notebooks you submit to CSD3.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#generate-the-prepared-work-units",
-    "href": "workshop/04-prepare-work-units.html#generate-the-prepared-work-units",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "In the notebook-helper pattern, preparation turns one maintained notebook into many concrete notebooks, one per work unit. This is where the full batch becomes visible before anything is submitted to Slurm.\nPapermill can execute notebooks from the command line and can also be used by a project-specific renderer to create prepared notebooks.\nMany projects use a flag such as prepare_only=True for this step: create the rendered notebooks, but do not run the expensive computation yet.\nOne generic rendering command might look like:\ncd \"$HOME/workspace/my_project\"\npapermill analyses/render_work_units.ipynb \\\n  analyses/render_work_units.ipynb \\\n  --progress-bar\nThe important output is the prepared set:\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | sort | head\nfind analyses/rendered -maxdepth 1 -type f -name \"*.ipynb\" | wc -l\nFor rendered notebooks, the unit identity often appears in the filename:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/analysis_example.ipynb",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#two-ways-to-represent-the-batch",
-    "href": "workshop/04-prepare-work-units.html#two-ways-to-represent-the-batch",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "Before submission, the full batch needs to be explicit: what units exist, and how one scheduled task identifies the unit it should run.\nOne common pattern is a single parametrizable runner plus a manifest:\nscripts/run_one_unit.py\njobs/manifest.txt\nThe runner knows how to process one unit. The manifest lists every unit in the batch. Later, each Slurm array task reads one manifest row.\nAnother pattern is one concrete file per unit:\nanalyses/rendered/fitting_example_unit0.ipynb\nanalyses/rendered/fitting_example_unit1.ipynb\nanalyses/rendered/fitting_example_unit2.ipynb\nThat concrete-file pattern is heavier, but it can be useful for notebook workflows because each generated notebook is inspectable and can be resubmitted directly.\nThis repo’s notebook helper uses both ideas. It submits one rendered notebook per work unit, and submit_notebooks.sh builds a manifest of those notebook paths so each Slurm array task runs one file.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#notebook-helper-pattern",
-    "href": "workshop/04-prepare-work-units.html#notebook-helper-pattern",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "The main example uses prepared notebooks. The pattern is:\nmaintained notebook\n  -&gt; render concrete work units\n  -&gt; analyses/rendered/fitting_example_unit0.ipynb\n  -&gt; analyses/rendered/fitting_example_unit1.ipynb\n  -&gt; analyses/rendered/fitting_example_unit2.ipynb\nThe rendered notebooks are the files that get transferred to CSD3 and submitted later. Each rendered notebook should already know which unit it is responsible for and where its outputs should go.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/04-prepare-work-units.html#other-workflows",
-    "href": "workshop/04-prepare-work-units.html#other-workflows",
-    "title": "Prepare Work Units",
-    "section": "",
-    "text": "For R, MATLAB, shell, or compiled workflows, the prepared unit may not be a notebook. These workflows often use the parametrizable runner plus manifest pattern:\n\none row in a manifest\none parameter file\none shell script plus arguments\none command that takes an input path and output path\n\nThe same rule still applies: prepare a batch of explicit units first. Later pages replace “rendered notebook” with your prepared script, manifest row, or input file.",
-    "crumbs": [
-      "Start",
-      "Prepare Work Units"
-    ]
-  },
-  {
-    "objectID": "workshop/02-environment-setup.html#csd3-create-the-activation-script",
-    "href": "workshop/02-environment-setup.html#csd3-create-the-activation-script",
-    "title": "Environment Setup",
-    "section": "",
-    "text": "Create one activation script that manual commands and Slurm jobs can both source.\nFor the Python example:\ncat &gt; \"$HOME/workspace/cluster_env.sh\" &lt;&lt;'EOF'\nsource \"$HOME/.local/bin/env\"\nsource \"$HOME/workspace/.venv/bin/activate\"\nEOF\n\nchmod +x \"$HOME/workspace/cluster_env.sh\"\nFor a module-based workflow, the same file might contain:\nmodule purge\nmodule load &lt;module-name&gt;\nThe point is not the filename. The point is to keep activation commands in one place so the terminal test and the submitted job use the same setup.",
-    "crumbs": [
-      "Start",
-      "Environment Setup"
-    ]
-  },
-  {
-    "objectID": "workshop/05-transfer-files.html#file-transfer-with-rsync",
-    "href": "workshop/05-transfer-files.html#file-transfer-with-rsync",
-    "title": "Transfer Files With rsync And Git",
-    "section": "",
-    "text": "Use rsync for files that need to move but should not necessarily become Git history:\n\nrendered notebooks in analyses/rendered/\ninput files\ngenerated outputs\nexecuted notebooks\nlarge or temporary files\n\nrsync works in both directions. The direction is determined by which path is first.\nLocal to CSD3:\nlocal_path/  cluster:path/\nCSD3 to local:\ncluster:path/  local_path/\nThe trailing slash means “copy the contents of this directory.”",
-    "crumbs": [
-      "Start",
-      "Transfer Files With rsync And Git"
-    ]
-  },
-  {
-    "objectID": "workshop/06-run-one-slurm-job.html#what-the-notebook-runner-provides",
-    "href": "workshop/06-run-one-slurm-job.html#what-the-notebook-runner-provides",
-    "title": "Run One Slurm Job",
-    "section": "",
-    "text": "run_notebook.sbatch is the notebook runner for this repo. The top of the file contains the Slurm resource settings:\n#SBATCH --job-name=nb\n#SBATCH -A TALMI-SL3-CPU\n#SBATCH -p icelake-himem\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --time=12:00:00\n#SBATCH --mem=16G\n#SBATCH --cpus-per-task=1\nThose lines choose the job name, account, partition, walltime, memory, and CPU count. For your own project, the account and resource requests need to match the allocation and workload you are using.\nThe rest of the script does the repeatable setup:\n\nresolves the notebook path\nfinds the project root by walking up to the nearest .git directory\nchanges into the project directory\nsources $HOME/workspace/cluster_env.sh\nsets thread-related environment variables from the Slurm CPU request\nruns Papermill on the notebook\n\nFor a single job, the notebook path is passed as an argument. For an array job later, the script reads the notebook path from a manifest line.",
-    "crumbs": [
-      "Start",
-      "Run One Slurm Job"
-    ]
-  },
-  {
-    "objectID": "workshop/09-monitor-and-recover.html#notebook-progress",
-    "href": "workshop/09-monitor-and-recover.html#notebook-progress",
-    "title": "Monitor And Recover",
-    "section": "",
-    "text": "For notebook jobs, the notebook itself is also a progress artifact. While a job is running, you can open the prepared notebook on CSD3 and inspect which cells have executed, what output has appeared, and whether a traceback has already been written.\nIn VS Code Remote-SSH, open the notebook path shown by check_run.sh -v. Refresh or reopen the notebook if the view does not update while the job is running.\nYou can also inspect the notebook file from the terminal:\nNOTEBOOK=\"$HOME/workspace/my_project/analyses/rendered/fitting_example_unit0.ipynb\"\n\npython - \"$NOTEBOOK\" &lt;&lt;'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\npath = Path(sys.argv[1])\nnb = json.loads(path.read_text())\ncode_cells = [cell for cell in nb[\"cells\"] if cell.get(\"cell_type\") == \"code\"]\nexecuted = [cell for cell in code_cells if cell.get(\"execution_count\") is not None]\nerrors = []\nfor index, cell in enumerate(code_cells, 1):\n    for output in cell.get(\"outputs\", []):\n        if output.get(\"output_type\") == \"error\":\n            errors.append((index, output.get(\"ename\", \"error\")))\n\nprint(f\"{len(executed)}/{len(code_cells)} code cells executed\")\nfor index, error in errors:\n    print(f\"cell {index}: {error}\")\nPY\nLong-running jobs should also write progress output. In Python, tqdm is a good default for loops. For other tools, use the equivalent progress meter or regular stdout messages. Progress output makes the .out log and the executed notebook more useful while the job is still running.",
-    "crumbs": [
-      "Start",
-      "Monitor And Recover"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html",
-    "href": "workshop/10-post-process-or-bring-results-back.html",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "After a batch finishes, decide where the next step should run.\nIf the next step is still compute-heavy, depends on large remote files, or produces reduced summaries from many outputs, run it on CSD3. If the next step is local inspection, writing, plotting, or comparison against local materials, bring back the files you need with rsync.\nGenerated outputs normally move with rsync, not Git.\n\n\nKeep post-processing on CSD3 when it reads many generated files, writes large intermediates, or would take a long time on your local machine.\nBring outputs back when the remaining work is lightweight, visual, interactive, or easier to do with local files.\nThe common pattern is:\nlarge batch on CSD3\n  -&gt; optional summary or reduction on CSD3\n  -&gt; filtered results copied back with rsync\n  -&gt; local inspection, figures, reports, or comparisons\n\n\n\nFor a short post-processing step, run the command in a CSD3 terminal:\ncd \"$HOME/workspace/my_project\"\nsource \"$HOME/workspace/cluster_env.sh\"\n\nRUN_TAG=\"experiment_001\"\npython scripts/summarize_outputs.py --run-tag \"$RUN_TAG\"\nIf the post-processing step is long, submit it as another Slurm job:\ncd \"$HOME/workspace/my_project\"\nmkdir -p runs\n\nsbatch \\\n  --job-name=summarize \\\n  --output \"$HOME/workspace/my_project/runs/summarize_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/summarize_%j.err\" \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && python scripts/summarize_outputs.py --run-tag experiment_001\"\nFor notebook workflows, post-processing may be another prepared analysis notebook submitted through the same helper:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nIf the post-processing should wait for an earlier batch, use the follow-up job pattern from Run Follow-Up Jobs.\n\n\n\nUse a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed for the next local step.\n\n\n\ncd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.\n\n\n\nCopy only the outputs you need locally:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nIf CSD3 post-processing produced smaller summaries, copy those instead of the full raw output set:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/reports/\" reports/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"\n\n\n\nAfter generated files are local, run the local checks or summaries for your project. Keep this step for work that is genuinely easier or more useful on the local machine:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.\nDo not copy every temporary file by default. Bring back the generated files that support inspection, summaries, figures, reports, or the next local comparison.",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#choose-where-the-next-step-runs",
-    "href": "workshop/10-post-process-or-bring-results-back.html#choose-where-the-next-step-runs",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "Keep post-processing on CSD3 when it reads many generated files, writes large intermediates, or would take a long time on your local machine.\nBring outputs back when the remaining work is lightweight, visual, interactive, or easier to do with local files.\nThe common pattern is:\nlarge batch on CSD3\n  -&gt; optional summary or reduction on CSD3\n  -&gt; filtered results copied back with rsync\n  -&gt; local inspection, figures, reports, or comparisons",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#csd3-post-process-near-the-data",
-    "href": "workshop/10-post-process-or-bring-results-back.html#csd3-post-process-near-the-data",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "For a short post-processing step, run the command in a CSD3 terminal:\ncd \"$HOME/workspace/my_project\"\nsource \"$HOME/workspace/cluster_env.sh\"\n\nRUN_TAG=\"experiment_001\"\npython scripts/summarize_outputs.py --run-tag \"$RUN_TAG\"\nIf the post-processing step is long, submit it as another Slurm job:\ncd \"$HOME/workspace/my_project\"\nmkdir -p runs\n\nsbatch \\\n  --job-name=summarize \\\n  --output \"$HOME/workspace/my_project/runs/summarize_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/summarize_%j.err\" \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && python scripts/summarize_outputs.py --run-tag experiment_001\"\nFor notebook workflows, post-processing may be another prepared analysis notebook submitted through the same helper:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nIf the post-processing should wait for an earlier batch, use the follow-up job pattern from Run Follow-Up Jobs.",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#choose-a-filter",
-    "href": "workshop/10-post-process-or-bring-results-back.html#choose-a-filter",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "Use a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed for the next local step.",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
-    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "cd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-retrieve-generated-outputs",
-    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-retrieve-generated-outputs",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "Copy only the outputs you need locally:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nIf CSD3 post-processing produced smaller summaries, copy those instead of the full raw output set:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/reports/\" reports/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
-    ]
-  },
-  {
-    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-inspect-and-summarize",
-    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-inspect-and-summarize",
-    "title": "Post-Process Or Bring Results Back",
-    "section": "",
-    "text": "After generated files are local, run the local checks or summaries for your project. Keep this step for work that is genuinely easier or more useful on the local machine:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.\nDo not copy every temporary file by default. Bring back the generated files that support inspection, summaries, figures, reports, or the next local comparison.",
-    "crumbs": [
-      "Start",
-      "Post-Process Or Bring Results Back"
     ]
   },
   {
@@ -1306,6 +712,226 @@
     "crumbs": [
       "Start",
       "Run Follow-Up Jobs"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html",
+    "href": "workshop/10-post-process-or-bring-results-back.html",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "After a batch finishes, decide where the next step should run.\nIf the next step is still compute-heavy, depends on large remote files, or produces reduced summaries from many outputs, run it on CSD3. If the next step is local inspection, writing, plotting, or comparison against local materials, bring back the files you need with rsync.\nGenerated outputs normally move with rsync, not Git.\n\n\nKeep post-processing on CSD3 when it reads many generated files, writes large intermediates, or would take a long time on your local machine.\nBring outputs back when the remaining work is lightweight, visual, interactive, or easier to do with local files.\nThe common pattern is:\nlarge batch on CSD3\n  -&gt; optional summary or reduction on CSD3\n  -&gt; filtered results copied back with rsync\n  -&gt; local inspection, figures, reports, or comparisons\nUse the next step to decide where the work belongs:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart TD\n  A[\"batch outputs on CSD3\"] --&gt; B{\"next step is still heavy&lt;br/&gt;or reads many remote files?\"}\n  B --&gt;|\"yes\"| C[\"post-process on CSD3\"]\n  C --&gt; D[\"copy reduced outputs\"]\n  B --&gt;|\"no\"| E[\"filtered rsync to local machine\"]\n  D --&gt; F[\"local inspection or reporting\"]\n  E --&gt; F\n\n\n\n\n\n\n\n\n\nFor a short post-processing step, run the command in a CSD3 terminal:\ncd \"$HOME/workspace/my_project\"\nsource \"$HOME/workspace/cluster_env.sh\"\n\nRUN_TAG=\"experiment_001\"\npython scripts/summarize_outputs.py --run-tag \"$RUN_TAG\"\nIf the post-processing step is long, submit it as another Slurm job:\ncd \"$HOME/workspace/my_project\"\nmkdir -p runs\n\nsbatch \\\n  --job-name=summarize \\\n  --output \"$HOME/workspace/my_project/runs/summarize_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/summarize_%j.err\" \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && python scripts/summarize_outputs.py --run-tag experiment_001\"\nFor notebook workflows, post-processing may be another prepared analysis notebook submitted through the same helper:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nIf the post-processing should wait for an earlier batch, use the follow-up job pattern from Run Follow-Up Jobs.\n\n\n\nUse a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed for the next local step.\n\n\n\ncd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.\n\n\n\nCopy only the outputs you need locally:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nIf CSD3 post-processing produced smaller summaries, copy those instead of the full raw output set:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/reports/\" reports/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"\n\n\n\nAfter generated files are local, run the local checks or summaries for your project. Keep this step for work that is genuinely easier or more useful on the local machine:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.\nDo not copy every temporary file by default. Bring back the generated files that support inspection, summaries, figures, reports, or the next local comparison.",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#choose-where-the-next-step-runs",
+    "href": "workshop/10-post-process-or-bring-results-back.html#choose-where-the-next-step-runs",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "Keep post-processing on CSD3 when it reads many generated files, writes large intermediates, or would take a long time on your local machine.\nBring outputs back when the remaining work is lightweight, visual, interactive, or easier to do with local files.\nThe common pattern is:\nlarge batch on CSD3\n  -&gt; optional summary or reduction on CSD3\n  -&gt; filtered results copied back with rsync\n  -&gt; local inspection, figures, reports, or comparisons\nUse the next step to decide where the work belongs:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart TD\n  A[\"batch outputs on CSD3\"] --&gt; B{\"next step is still heavy&lt;br/&gt;or reads many remote files?\"}\n  B --&gt;|\"yes\"| C[\"post-process on CSD3\"]\n  C --&gt; D[\"copy reduced outputs\"]\n  B --&gt;|\"no\"| E[\"filtered rsync to local machine\"]\n  D --&gt; F[\"local inspection or reporting\"]\n  E --&gt; F",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#csd3-post-process-near-the-data",
+    "href": "workshop/10-post-process-or-bring-results-back.html#csd3-post-process-near-the-data",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "For a short post-processing step, run the command in a CSD3 terminal:\ncd \"$HOME/workspace/my_project\"\nsource \"$HOME/workspace/cluster_env.sh\"\n\nRUN_TAG=\"experiment_001\"\npython scripts/summarize_outputs.py --run-tag \"$RUN_TAG\"\nIf the post-processing step is long, submit it as another Slurm job:\ncd \"$HOME/workspace/my_project\"\nmkdir -p runs\n\nsbatch \\\n  --job-name=summarize \\\n  --output \"$HOME/workspace/my_project/runs/summarize_%j.out\" \\\n  --error \"$HOME/workspace/my_project/runs/summarize_%j.err\" \\\n  --wrap \"source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && python scripts/summarize_outputs.py --run-tag experiment_001\"\nFor notebook workflows, post-processing may be another prepared analysis notebook submitted through the same helper:\ncd \"$HOME/workspace/sbatch\"\n\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"analysis_*.ipynb\"\nIf the post-processing should wait for an earlier batch, use the follow-up job pattern from Run Follow-Up Jobs.",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#choose-a-filter",
+    "href": "workshop/10-post-process-or-bring-results-back.html#choose-a-filter",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "Use a run tag or filename pattern when you only want one batch:\nRUN_TAG=\"experiment_001\"\nCommon generated folders include:\noutputs/\nfits/\nfigures/\nreports/\nanalyses/rendered/\nruns/\nThe exact folders depend on your project. The important decision is which generated files are needed for the next local step.",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
+    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-open-one-ssh-connection-for-transfers",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "cd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\nSOCK=\"$HOME/.ssh/csd3-rsync-sock\"\n\nrm -f \"$SOCK\"\nssh -M -S \"$SOCK\" -fN \"$CLUSTER\"\nThe control socket lets repeated rsync commands reuse one SSH connection.",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-retrieve-generated-outputs",
+    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-retrieve-generated-outputs",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "Copy only the outputs you need locally:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\nRetrieve figures or reports the same way:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/figures/\" figures/\nFor notebook workflows, you may also want executed notebooks:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*.ipynb\" \\\n  --include='analysis_*.ipynb' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/analyses/rendered/\" analyses/rendered/\nIf CSD3 post-processing produced smaller summaries, copy those instead of the full raw output set:\nrsync -av --progress --rsh=\"ssh -S $SOCK\" --prune-empty-dirs \\\n  --include='*/' \\\n  --include=\"*${RUN_TAG}*\" \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/reports/\" reports/\nClose the control socket:\nssh -S \"$SOCK\" -O exit \"$CLUSTER\"",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/10-post-process-or-bring-results-back.html#local-machine-inspect-and-summarize",
+    "href": "workshop/10-post-process-or-bring-results-back.html#local-machine-inspect-and-summarize",
+    "title": "Post-Process Or Bring Results Back",
+    "section": "",
+    "text": "After generated files are local, run the local checks or summaries for your project. Keep this step for work that is genuinely easier or more useful on the local machine:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f | head\nbash scripts/check_outputs.sh\nFor a notebook workflow, a local comparison or report notebook might be rerun after the cluster outputs are back:\npapermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar\nIf nothing copies, inspect the run tag and include patterns first. Filtered rsync commands only copy files that match the include rules.\nDo not copy every temporary file by default. Bring back the generated files that support inspection, summaries, figures, reports, or the next local comparison.",
+    "crumbs": [
+      "Start",
+      "Post-Process Or Bring Results Back"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html",
+    "href": "workshop/11-focused-reruns.html",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "You rarely need to rerun everything. A focused rerun refreshes only one subset of jobs and only the outputs that depend on them.\nThis usually comes after monitoring, log inspection, or local review has told you which subset is stale, failed, or affected by a change.\nIt is useful after a code change, a failed subset, a new parameter setting, or a corrected input file.\n\n\nCreate a narrow file pattern for prepared notebooks:\ncd \"$HOME/workspace/my_project\"\nfind analyses/rendered -maxdepth 1 -type f -name \"*target*.ipynb\" | sort\nFor a manifest-based script workflow, create a narrow manifest instead:\nmkdir -p jobs\nfind inputs -maxdepth 1 -type f -name \"*target*.json\" | sort &gt; jobs/manifest_target.txt\n\n\n\nOnly remove outputs for the target subset:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f -name \"*target*\" -delete\nfind figures -type f -name \"*target*\" -delete\nDo not delete the prepared work units you are about to submit.\n\n\n\nFor notebook jobs:\ncd \"$HOME/workspace/sbatch\"\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"*target*.ipynb\" \\\n  25\nFor a manifest-based script workflow:\nCOUNT=\"$(wc -l &lt; \"$HOME/workspace/my_project/jobs/manifest_target.txt\")\"\n\nsbatch \\\n  --job-name=target \\\n  --array \"0-$((COUNT - 1))%25\" \\\n  --output \"$HOME/workspace/my_project/runs/target_%A_%a.out\" \\\n  --error \"$HOME/workspace/my_project/runs/target_%A_%a.err\" \\\n  \"$HOME/workspace/my_project/scripts/run_from_manifest.sh\" \\\n  \"$HOME/workspace/my_project/jobs/manifest_target.txt\"\n\n\n\ncd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\n\nrsync -av --progress --prune-empty-dirs \\\n  --include='*/' \\\n  --include='*target*' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/\n\n\n\nIf you temporarily narrowed a config file, restore it before running aggregate summaries:\ngit status --short\nThen rerun any summaries that depend on the refreshed outputs.\n\n\n\nA focused rerun is complete only when the temporary selection has been restored or clearly recorded. Otherwise future summaries may accidentally use the narrow configuration.\nFocused reruns are easy to mix with stale outputs. Clear only the target outputs, submit only the target jobs, and sync only matching results back.",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#focus-the-inputs",
+    "href": "workshop/11-focused-reruns.html#focus-the-inputs",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "Create a narrow file pattern for prepared notebooks:\ncd \"$HOME/workspace/my_project\"\nfind analyses/rendered -maxdepth 1 -type f -name \"*target*.ipynb\" | sort\nFor a manifest-based script workflow, create a narrow manifest instead:\nmkdir -p jobs\nfind inputs -maxdepth 1 -type f -name \"*target*.json\" | sort &gt; jobs/manifest_target.txt",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#clear-stale-target-outputs",
+    "href": "workshop/11-focused-reruns.html#clear-stale-target-outputs",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "Only remove outputs for the target subset:\ncd \"$HOME/workspace/my_project\"\nfind outputs -type f -name \"*target*\" -delete\nfind figures -type f -name \"*target*\" -delete\nDo not delete the prepared work units you are about to submit.",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#submit-the-narrow-batch",
+    "href": "workshop/11-focused-reruns.html#submit-the-narrow-batch",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "For notebook jobs:\ncd \"$HOME/workspace/sbatch\"\n./submit_notebooks.sh \\\n  \"$HOME/workspace/my_project/analyses/rendered\" \\\n  \"*target*.ipynb\" \\\n  25\nFor a manifest-based script workflow:\nCOUNT=\"$(wc -l &lt; \"$HOME/workspace/my_project/jobs/manifest_target.txt\")\"\n\nsbatch \\\n  --job-name=target \\\n  --array \"0-$((COUNT - 1))%25\" \\\n  --output \"$HOME/workspace/my_project/runs/target_%A_%a.out\" \\\n  --error \"$HOME/workspace/my_project/runs/target_%A_%a.err\" \\\n  \"$HOME/workspace/my_project/scripts/run_from_manifest.sh\" \\\n  \"$HOME/workspace/my_project/jobs/manifest_target.txt\"",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#bring-matching-outputs-back",
+    "href": "workshop/11-focused-reruns.html#bring-matching-outputs-back",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "cd \"$HOME/workspace/my_project\"\nCLUSTER=\"&lt;your-crsid-or-username&gt;@login-cpu.hpc.cam.ac.uk\"\n\nrsync -av --progress --prune-empty-dirs \\\n  --include='*/' \\\n  --include='*target*' \\\n  --exclude='*' \\\n  \"${CLUSTER}:~/workspace/my_project/outputs/\" outputs/",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#restore-any-temporary-configuration",
+    "href": "workshop/11-focused-reruns.html#restore-any-temporary-configuration",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "If you temporarily narrowed a config file, restore it before running aggregate summaries:\ngit status --short\nThen rerun any summaries that depend on the refreshed outputs.",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/11-focused-reruns.html#restore-the-full-workflow",
+    "href": "workshop/11-focused-reruns.html#restore-the-full-workflow",
+    "title": "Focused Reruns",
+    "section": "",
+    "text": "A focused rerun is complete only when the temporary selection has been restored or clearly recorded. Otherwise future summaries may accidentally use the narrow configuration.\nFocused reruns are easy to mix with stale outputs. Clear only the target outputs, submit only the target jobs, and sync only matching results back.",
+    "crumbs": [
+      "Start",
+      "Focused Reruns"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html",
+    "href": "workshop/00-orientation.html",
+    "title": "Orientation",
+    "section": "",
+    "text": "This guide is about using CSD3 for research work that is too large, too slow, or too repetitive for a local machine.\nThe examples use generic project names. The main path uses a Python and notebook-oriented workflow to make the steps concrete, but the same pattern can be adapted to other tools.\n\n\nCSD3 helps when work can be split into independent jobs. Common examples:\n\nsimulations with many parameter settings\nmodel fitting across subjects, datasets, or hyperparameters\nbatch data processing\nreport or figure generation\nnotebook execution\nrepeated command-line analyses\n\nThe common pattern is:\nprepare inputs -&gt; submit jobs -&gt; monitor logs -&gt; collect outputs\nThis is different from using the cluster as one bigger laptop. The strongest cluster workflows are designed as batches of self-contained jobs.\n\n\n\nKeep these places separate while reading the commands:\nlocal machine\n  write code, prepare inputs, inspect final results\n\nCSD3 login node\n  edit files, pull repos, submit jobs, inspect logs\n\nCSD3 compute node\n  runs the scheduled job after Slurm starts it\nYou usually do not log into a compute node yourself. You submit a job from the login node, and Slurm starts it later on a compute node.\nA scheduled job moves through those places like this:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"local machine&lt;br/&gt;edit, prepare, inspect\"] --&gt; B[\"CSD3 login node&lt;br/&gt;connect, submit, inspect\"]\n  B --&gt; C[\"Slurm scheduler\"]\n  C --&gt; D[\"CSD3 compute node&lt;br/&gt;run the job\"]\n  D --&gt; E[\"logs and outputs\"]\n  E --&gt; B\n  E --&gt; A\n\n\n\n\n\n\n\n\n\nA common local pattern is to write one script that loops over every unit of work: run this analysis for every subject, every input file, every simulation seed, or every parameter setting.\nThat can be fine on a laptop, but it hides the parallelism from the scheduler. From Slurm’s point of view, that script is just one long job.\nA local script often looks like this:\nfor each input:\n  run the analysis\nThe cluster version usually looks more like this:\nrun the analysis for this one input\nFor cluster work, the better pattern is usually to make one unit of work explicit. Instead of “run everything,” the job should mean something like “run case 001,” “fit subject 17,” “simulate seed 42,” or “process this one input file.”\nThen Slurm can run many copies of the same command with different inputs.\nThe design change is to move the outer loop out of the job:\nLocal loop hidden inside one job:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"one submitted job\"] --&gt; B[\"script with for-loop\"]\n  B --&gt; C[\"run unit 1\"]\n  C --&gt; D[\"then run unit 2\"]\n  D --&gt; E[\"then run unit 3\"]\n\n\n\n\n\n\nCluster pattern visible to Slurm: separate tasks run one unit each.\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"Slurm array\"] --&gt; B[\"task 1&lt;br/&gt;run unit 1\"]\n  A --&gt; C[\"task 2&lt;br/&gt;run unit 2\"]\n  A --&gt; D[\"task 3&lt;br/&gt;run unit 3\"]\n\n\n\n\n\n\nA good cluster job needs:\n\na command that runs one unit of work\nparameters or input files that identify that unit\na working directory and software environment\npredictable output paths for that unit\nstdout and stderr logs for that unit\nresource requests that fit one unit, such as time, memory, CPUs, and account\n\nThe important design choice is that the job should not contain the whole outer loop. The job should handle one unit cleanly, and the scheduler should handle the repetition.\n\n\n\nSlurm is the scheduler on CSD3. It decides when and where jobs run.\nsbatch is the command that submits a job to Slurm.\nA job is one scheduled piece of work.\nA job array is a group of similar jobs submitted together.\nA login node is where you connect, edit, pull code, and submit jobs.\nA compute node is where the job actually runs.\nstdout and stderr logs are the text files that show normal output and error output from a job.\n\n\n\nThe login node is not where large computations should run. Treat it as a control room for editing, submitting, and inspecting work. Compute-heavy work should run as scheduled jobs.",
+    "crumbs": [
+      "Start",
+      "Orientation"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html#what-csd3-adds",
+    "href": "workshop/00-orientation.html#what-csd3-adds",
+    "title": "Orientation",
+    "section": "",
+    "text": "CSD3 helps when work can be split into independent jobs. Common examples:\n\nsimulations with many parameter settings\nmodel fitting across subjects, datasets, or hyperparameters\nbatch data processing\nreport or figure generation\nnotebook execution\nrepeated command-line analyses\n\nThe common pattern is:\nprepare inputs -&gt; submit jobs -&gt; monitor logs -&gt; collect outputs\nThis is different from using the cluster as one bigger laptop. The strongest cluster workflows are designed as batches of self-contained jobs.",
+    "crumbs": [
+      "Start",
+      "Orientation"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html#the-three-places",
+    "href": "workshop/00-orientation.html#the-three-places",
+    "title": "Orientation",
+    "section": "",
+    "text": "Keep these places separate while reading the commands:\nlocal machine\n  write code, prepare inputs, inspect final results\n\nCSD3 login node\n  edit files, pull repos, submit jobs, inspect logs\n\nCSD3 compute node\n  runs the scheduled job after Slurm starts it\nYou usually do not log into a compute node yourself. You submit a job from the login node, and Slurm starts it later on a compute node.\nA scheduled job moves through those places like this:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"local machine&lt;br/&gt;edit, prepare, inspect\"] --&gt; B[\"CSD3 login node&lt;br/&gt;connect, submit, inspect\"]\n  B --&gt; C[\"Slurm scheduler\"]\n  C --&gt; D[\"CSD3 compute node&lt;br/&gt;run the job\"]\n  D --&gt; E[\"logs and outputs\"]\n  E --&gt; B\n  E --&gt; A",
+    "crumbs": [
+      "Start",
+      "Orientation"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html#what-a-job-needs",
+    "href": "workshop/00-orientation.html#what-a-job-needs",
+    "title": "Orientation",
+    "section": "",
+    "text": "A common local pattern is to write one script that loops over every unit of work: run this analysis for every subject, every input file, every simulation seed, or every parameter setting.\nThat can be fine on a laptop, but it hides the parallelism from the scheduler. From Slurm’s point of view, that script is just one long job.\nA local script often looks like this:\nfor each input:\n  run the analysis\nThe cluster version usually looks more like this:\nrun the analysis for this one input\nFor cluster work, the better pattern is usually to make one unit of work explicit. Instead of “run everything,” the job should mean something like “run case 001,” “fit subject 17,” “simulate seed 42,” or “process this one input file.”\nThen Slurm can run many copies of the same command with different inputs.\nThe design change is to move the outer loop out of the job:\nLocal loop hidden inside one job:\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"one submitted job\"] --&gt; B[\"script with for-loop\"]\n  B --&gt; C[\"run unit 1\"]\n  C --&gt; D[\"then run unit 2\"]\n  D --&gt; E[\"then run unit 3\"]\n\n\n\n\n\n\nCluster pattern visible to Slurm: separate tasks run one unit each.\n\n\n\n\n\n%%{init: {\"theme\": \"dark\"}}%%\nflowchart LR\n  A[\"Slurm array\"] --&gt; B[\"task 1&lt;br/&gt;run unit 1\"]\n  A --&gt; C[\"task 2&lt;br/&gt;run unit 2\"]\n  A --&gt; D[\"task 3&lt;br/&gt;run unit 3\"]\n\n\n\n\n\n\nA good cluster job needs:\n\na command that runs one unit of work\nparameters or input files that identify that unit\na working directory and software environment\npredictable output paths for that unit\nstdout and stderr logs for that unit\nresource requests that fit one unit, such as time, memory, CPUs, and account\n\nThe important design choice is that the job should not contain the whole outer loop. The job should handle one unit cleanly, and the scheduler should handle the repetition.",
+    "crumbs": [
+      "Start",
+      "Orientation"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html#vocabulary",
+    "href": "workshop/00-orientation.html#vocabulary",
+    "title": "Orientation",
+    "section": "",
+    "text": "Slurm is the scheduler on CSD3. It decides when and where jobs run.\nsbatch is the command that submits a job to Slurm.\nA job is one scheduled piece of work.\nA job array is a group of similar jobs submitted together.\nA login node is where you connect, edit, pull code, and submit jobs.\nA compute node is where the job actually runs.\nstdout and stderr logs are the text files that show normal output and error output from a job.",
+    "crumbs": [
+      "Start",
+      "Orientation"
+    ]
+  },
+  {
+    "objectID": "workshop/00-orientation.html#main-point",
+    "href": "workshop/00-orientation.html#main-point",
+    "title": "Orientation",
+    "section": "",
+    "text": "The login node is not where large computations should run. Treat it as a control room for editing, submitting, and inspecting work. Compute-heavy work should run as scheduled jobs.",
+    "crumbs": [
+      "Start",
+      "Orientation"
     ]
   }
 ]

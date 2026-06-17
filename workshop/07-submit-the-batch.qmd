@@ -65,14 +65,17 @@ index.
 In this repo, the helper passes a manifest to `run_notebook.sbatch`. Each array
 task uses its task index to choose one line from the manifest.
 
-```text
-task 0 -> manifest line 1 -> first notebook
-task 1 -> manifest line 2 -> second notebook
-task 2 -> manifest line 3 -> third notebook
-```
-
 The array job is the scheduler mechanism. The manifest is the list of prepared
-work units.
+work units. The important detail is the offset: Slurm array task IDs start at
+0, while manifest line numbers start at 1.
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  T0["array task 0"] -- "reads line 1" --> U0["unit A"]
+  T1["array task 1"] -- "reads line 2" --> U1["unit B"]
+  T2["array task 2"] -- "reads line 3" --> U2["unit C"]
+```
 
 CSD3's official batch-job examples include
 [sample submission scripts](https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html#sample-submission-scripts)

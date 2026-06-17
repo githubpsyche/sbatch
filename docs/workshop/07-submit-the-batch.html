@@ -102,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -221,20 +224,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/08-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Run Follow-Up Jobs</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../workshop/09-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+  <a href="../workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Monitor And Recover</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../workshop/10-bring-results-back.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bring Results Back</span></a>
+  <a href="../workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#adaptation-notes" id="toc-adaptation-notes" class="nav-link" data-scroll-target="#adaptation-notes">Adaptation Notes</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/07-submit-the-batch.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/07-submit-the-batch.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -323,10 +326,23 @@ one Slurm array with one task per notebook</code></pre>
 <h2 class="anchored" data-anchor-id="what-a-slurm-array-adds">What A Slurm Array Adds</h2>
 <p>A Slurm array repeats the same job script many times. Each task gets a task index.</p>
 <p>In this repo, the helper passes a manifest to <code>run_notebook.sbatch</code>. Each array task uses its task index to choose one line from the manifest.</p>
-<pre class="text"><code>task 0 -&gt; manifest line 1 -&gt; first notebook
-task 1 -&gt; manifest line 2 -&gt; second notebook
-task 2 -&gt; manifest line 3 -&gt; third notebook</code></pre>
-<p>The array job is the scheduler mechanism. The manifest is the list of prepared work units.</p>
+<p>The array job is the scheduler mechanism. The manifest is the list of prepared work units. The important detail is the offset: Slurm array task IDs start at 0, while manifest line numbers start at 1.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {"theme": "dark"}}%%
+flowchart LR
+  T0["array task 0"] -- "reads line 1" --&gt; U0["unit A"]
+  T1["array task 1"] -- "reads line 2" --&gt; U1["unit B"]
+  T2["array task 2"] -- "reads line 3" --&gt; U2["unit C"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <p>CSD3’s official batch-job examples include <a href="https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html#sample-submission-scripts">sample submission scripts</a> and <a href="https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html#array-jobs">array jobs</a>.</p>
 </section>
 <section id="log-names" class="level2">
@@ -757,4 +773,4 @@ runs/&lt;run_id&gt;/logs/nb_&lt;array_job_id&gt;_&lt;task_id&gt;.err</code></pre
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/07-submit-the-batch.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/githubpsyche/sbatch/edit/main/workshop/07-submit-the-batch.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/githubpsyche/sbatch/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -37,6 +37,26 @@ This repo's notebook helper uses both ideas. It submits one rendered notebook
 per work unit, and `submit_notebooks.sh` builds a manifest of those notebook
 paths so each Slurm array task runs one file.
 
+The two representations differ in what gets made before submission:
+
+Runner plus manifest:
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  M["jobs/manifest.txt<br/>unit 0<br/>unit 1<br/>unit 2"] --> R["scripts/run_one_unit.py"]
+```
+
+Concrete file per unit:
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart LR
+  N0["rendered_unit0.ipynb"]
+  N1["rendered_unit1.ipynb"]
+  N2["rendered_unit2.ipynb"]
+```
+
 ## What A Prepared Unit Should Contain
 
 A prepared unit should make these choices explicit:

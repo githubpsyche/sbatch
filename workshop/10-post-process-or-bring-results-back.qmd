@@ -26,6 +26,19 @@ large batch on CSD3
   -> local inspection, figures, reports, or comparisons
 ```
 
+Use the next step to decide where the work belongs:
+
+```{mermaid}
+%%{init: {"theme": "dark"}}%%
+flowchart TD
+  A["batch outputs on CSD3"] --> B{"next step is still heavy<br/>or reads many remote files?"}
+  B -->|"yes"| C["post-process on CSD3"]
+  C --> D["copy reduced outputs"]
+  B -->|"no"| E["filtered rsync to local machine"]
+  D --> F["local inspection or reporting"]
+  E --> F
+```
+
 ## CSD3: Post-Process Near The Data
 
 For a short post-processing step, run the command in a CSD3 terminal:

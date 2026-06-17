@@ -11,7 +11,7 @@ the notebooks.
 
 ## Guide Path
 
-Start with the site landing page, [index.md](index.md), then read the guide
+Start with the site landing page, [index.qmd](index.qmd), then read the guide
 pages in sidebar order.
 
 The guide is built around a transferable cluster workflow:
@@ -23,7 +23,7 @@ prepare work units -> transfer files to CSD3 -> run one Slurm job -> submit the 
 The pages are workflow sections. Each page explains what the step is, why it
 exists, where the command runs, and what files or logs to inspect.
 
-Begin with [workshop/00-orientation.md](workshop/00-orientation.md).
+Begin with [workshop/00-orientation.qmd](workshop/00-orientation.qmd).
 
 ## Website
 

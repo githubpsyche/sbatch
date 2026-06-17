@@ -89,6 +89,10 @@ In VS Code:
 5. Open the remote project folder, usually under `~/workspace/`.
 6. Use the integrated terminal for CSD3 commands.
 
+Remote Explorer is where configured SSH targets appear:
+
+![VS Code Remote Explorer showing SSH targets](../assets/01-remote-explorer.png)
+
 Commands labeled "CSD3" in this guide run in that remote terminal.
 
 ## Fallback: Login-Web

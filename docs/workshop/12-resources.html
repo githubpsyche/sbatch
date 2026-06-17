@@ -185,14 +185,23 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/08-follow-up-jobs.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/08-monitor-and-recover.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Monitor And Recover</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/09-monitor-and-recover.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/09-follow-up-jobs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Run Follow-Up Jobs</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
- <span class="menu-text">workshop/10-bring-results-back.md</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../workshop/10-post-process-or-bring-results-back.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Post-Process Or Bring Results Back</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../workshop/11-focused-reruns.html" class="sidebar-item-text sidebar-link">
@@ -252,6 +261,7 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://docs.python.org/3/library/venv.html">Python <code>venv</code></a> explains the standard-library virtual environment concept behind isolated project environments.</p>
 <p><a href="https://docs.python.org/3/howto/argparse.html">Python argparse tutorial</a> is useful when turning a local script into a command that handles one unit of work at a time.</p>
 <p><a href="https://papermill.readthedocs.io/">Papermill</a> is relevant for notebook-based workflows and the notebook helper scripts in this repo.</p>
+<p><a href="https://tqdm.github.io/">tqdm</a> is useful for progress output in long Python loops. Progress output makes Slurm logs and executed notebooks easier to monitor while jobs are still running.</p>
 </section>
 <section id="local-project-references" class="level2">
 <h2 class="anchored" data-anchor-id="local-project-references">Local Project References</h2>
@@ -260,8 +270,8 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="../workshop/00-orientation.html">Orientation</a></li>
 <li><a href="../workshop/03-workflow-map.html">Workflow Map</a></li>
 <li><a href="../workshop/07-submit-the-batch.html">Submit The Batch</a></li>
-<li><a href="09-monitor-and-recover.md">Monitor And Recover</a></li>
-<li><a href="10-bring-results-back.md">Bring Results Back</a></li>
+<li><a href="../workshop/08-monitor-and-recover.html">Monitor And Recover</a></li>
+<li><a href="../workshop/10-post-process-or-bring-results-back.html">Post-Process Or Bring Results Back</a></li>
 <li><a href="https://github.com/githubpsyche/sbatch/tree/master/examples/project-scripts">Project-Side Script Examples</a></li>
 </ul>
 <p>Use the root scripts when you need exact behavior for the notebook helper:</p>
