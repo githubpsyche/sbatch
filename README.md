@@ -1,301 +1,132 @@
-# CSD3 Notebook Runner
+# CSD3 Notebook Runner and Workflow Guide
 
-Submits prepared Jupyter notebooks to Slurm on CSD3, one notebook per task. Project-specific notebook preparation and render workflows belong upstream in the project that produced the notebooks.
+This repo has two parts:
 
-## First-Time Setup
+1. Provide small shell scripts for running prepared Jupyter notebooks on CSD3 with Slurm.
+2. Provide a project-agnostic guide for using CSD3 for research workflows.
 
-1. SSH to the cluster and complete the 2-factor step.
+The scripts are intentionally plain Bash. Project-specific notebook preparation,
+simulation, analysis, and scientific logic belong in the project that produced
+the notebooks.
 
-```bash
-ssh <your_username>@<cluster_host>
-```
+## Guide Path
 
-2. Create a workspace directory in your home folder.
+Start with the site landing page, [index.md](index.md), then read the guide
+pages in sidebar order.
 
-```bash
-mkdir -p "$HOME/workspace"
-cd "$HOME/workspace"
-```
-
-3. Install `uv`.
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-4. Add `uv` to your shell for the current session.
-
-```bash
-source "$HOME/.local/bin/env"
-```
-
-5. Add that line to `.bashrc` so future sessions see it.
-
-```bash
-echo 'source "$HOME/.local/bin/env"' >> "$HOME/.bashrc"
-source "$HOME/.bashrc"
-```
-
-6. Clone the repos you need into `~/workspace`.
-
-```bash
-cd "$HOME/workspace"
-git clone <jaxcmr_repo_url>
-git clone <repfr_repo_url>
-git clone <sbatch_repo_url>
-```
-
-7. Discover your CSD3 Slurm account.
-
-```bash
-mybalance
-```
-
-For the current setup, the relevant CPU account is:
+The guide is built around a transferable cluster workflow:
 
 ```text
-TALMI-SL3-CPU
+prepare work units -> transfer files to CSD3 -> run one Slurm job -> submit the batch -> monitor -> recover failures -> run follow-up jobs -> bring results back
 ```
 
-The tracked `sbatch` scripts now assume that account and use the
-`icelake-himem` partition by default.
+The pages are workflow sections. Each page explains what the step is, why it
+exists, where the command runs, and what files or logs to inspect.
 
-8. Create one shared virtual environment outside the repos.
+Begin with [workshop/00-orientation.md](workshop/00-orientation.md).
+
+## Website
+
+The guide can be rendered as a small Quarto website:
 
 ```bash
-uv venv "$HOME/workspace/.venv" --python 3.12
-source "$HOME/workspace/.venv/bin/activate"
+quarto render
 ```
 
-9. Install packages into the shared environment.
+The rendered site is written to `docs/`.
 
-```bash
-cd "$HOME/workspace"
-uv pip install -e "jaxcmr[dev]"
-uv pip install jupyter nbclient pandas papermill
+## Runner Scripts
+
+The root scripts are the reusable execution layer.
+
+- `run_notebook.sbatch`: execute one notebook, either directly or from a manifest line in a Slurm array.
+- `submit_notebooks.sh`: build a manifest from a notebook directory and submit one or more Slurm arrays.
+- `check_run.sh`: summarize the newest or specified run directory using Slurm accounting state.
+- `resubmit_failed.sh`: copy failed notebooks from a previous run and resubmit only those notebooks.
+
+Current CSD3 defaults live in `run_notebook.sbatch`:
+
+```text
+account:   TALMI-SL3-CPU
+partition: icelake-himem
+time:      12:00:00
+memory:    16G
+cpus:      1
 ```
 
-Run from `~/workspace/` (not from inside a project directory) to avoid
-uv's project-mode detection creating unwanted project-local venvs.
+Those defaults match the current tested CSD3 workflow. Change them deliberately
+for a different account or resource profile.
 
-Install any project packages that need to be importable (e.g. `lpp_ecmr`):
+## Minimal Use
 
-```bash
-uv pip install -e lpp_ecmr
-```
-
-Notes:
-
-- The shared environment lives outside the repos so it can serve multiple
-  projects.
-- `TALMI-SL3-CPU` is an SL3 account. On CSD3, SL3 CPU jobs cannot run longer
-  than 12 hours, so treat very long fitting notebooks as follow-up work.
-
-## Reusable Environment Script
-
-Save one small activation script that can be sourced manually now and later from
-Slurm jobs.
-
-```bash
-cat > "$HOME/workspace/cluster_env.sh" <<'EOF'
-source "$HOME/.local/bin/env"
-source "$HOME/workspace/.venv/bin/activate"
-EOF
-
-chmod +x "$HOME/workspace/cluster_env.sh"
-```
-
-## First Verification
-
-Before using Slurm, verify the environment by hand.
-
-1. Confirm `jaxcmr` imports from the shared environment.
-
-```bash
-source "$HOME/workspace/cluster_env.sh"
-cd "$HOME/workspace/repfr"
-python -c "import jaxcmr; print(jaxcmr.__file__)"
-```
-
-2. Run one rendered notebook manually.
-
-```bash
-source "$HOME/workspace/cluster_env.sh"
-cd "$HOME/workspace/repfr/analyses/rendered"
-papermill fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb \
-  fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb \
-  --progress-bar
-```
-
-For this first check, pick one per-subject fitting notebook. These are
-self-contained: they load data, fit one subject, simulate, and optionally
-generate figures. A single-subject fit with `best_of=3` typically takes
-under a minute.
-
-If that works, the main execution prerequisites are in place:
-
-- the shared environment activates correctly
-- `jaxcmr` imports
-- a prepared notebook can execute on the cluster outside Slurm
-
-## Next Step
-
-Once the manual notebook run works, make the Slurm runner use the same
-environment.
-
-The tracked `sbatch/run_notebook.sbatch` file now does this directly. It
-sources `cluster_env.sh`, sets `UV_NO_PROJECT=1` to prevent uv from
-creating project-local venvs, and runs the notebook via papermill (which
-writes cell outputs back to the file as each cell completes).
-
-## First Slurm Smoke Test
-
-Before trying a batch, submit one notebook as one Slurm job.
-
-```bash
-mkdir -p "$HOME/workspace/repfr/runs"
-cd "$HOME/workspace/sbatch"
-
-sbatch \
-  --output "$HOME/workspace/repfr/runs/smoke_%j.out" \
-  --error "$HOME/workspace/repfr/runs/smoke_%j.err" \
-  run_notebook.sbatch \
-  "$HOME/workspace/repfr/analyses/rendered/fitting_RepeatedRecallsGordonRanschburg2021_WeirdCMRNoStop_rerun_best_of_3_sub0.ipynb"
-```
-
-Then:
-
-1. Note the job ID printed by `sbatch`.
-2. Check that the job appears in the queue:
-
-```bash
-squeue -u "$USER"
-```
-
-3. After it finishes, inspect the logs:
-
-```bash
-ls "$HOME/workspace/repfr/runs"
-cat "$HOME/workspace/repfr/runs/smoke_<jobid>.out"
-cat "$HOME/workspace/repfr/runs/smoke_<jobid>.err"
-```
-
-If this works, you have shown that:
-
-- Slurm can launch the job
-- the job can activate the shared environment
-- the job can execute one prepared notebook on a compute node
-- the hardcoded CSD3 account and partition are valid for this workflow
-
-## First Batch Submission
-
-Once the single-job smoke test works, submit a tiny batch through the wrapper.
-
-For a first batch, keep it very small. Start with one notebook or a narrow glob.
+On CSD3, after the project and environment are in place:
 
 ```bash
 cd "$HOME/workspace/sbatch"
 ./submit_notebooks.sh \
-  "$HOME/workspace/repfr/analyses/rendered" \
-  "crp_*.ipynb"
+  "$HOME/workspace/my_project/analyses/rendered" \
+  "*.ipynb"
 ```
 
-Or, if you want a slightly larger first test:
+From the project directory, monitor the newest run:
+
+```bash
+cd "$HOME/workspace/my_project"
+"$HOME/workspace/sbatch/check_run.sh"
+"$HOME/workspace/sbatch/check_run.sh" -v | grep FAILED
+```
+
+Resubmit failed tasks from the newest run:
+
+```bash
+cd "$HOME/workspace/my_project"
+"$HOME/workspace/sbatch/resubmit_failed.sh"
+```
+
+For a post-processing chain, pass a sentinel script:
 
 ```bash
 cd "$HOME/workspace/sbatch"
 ./submit_notebooks.sh \
-  "$HOME/workspace/repfr/analyses/rendered" \
-  "spc_*.ipynb"
+  --sentinel "$HOME/workspace/my_project/scripts/after_jobs.sh" \
+  "$HOME/workspace/my_project/analyses/rendered" \
+  "*.ipynb"
 ```
 
-The runner targets per-subject fitting jobs on `icelake-himem`
-(`1` CPU, `4G`, `12:00:00`). Submissions larger than 1000 notebooks are
-automatically split into multiple array jobs.
+The sentinel receives the project directory as its first argument and runs only
+after all array tasks succeed.
 
-After submission:
+These scripts are notebook-oriented helpers. If your work uses shell scripts,
+Python scripts, R scripts, compiled programs, or another command-line tool, the
+same Slurm workflow still applies even if you do not use the notebook helper.
 
-Check progress with:
+For the full repeated workflow, including file transfer, follow-up jobs, result
+retrieval, and focused reruns, see
+[workshop/03-workflow-map.md](workshop/03-workflow-map.md).
 
-```bash
-cd ~/workspace/repfr && ~/workspace/sbatch/check_run.sh       # newest run in current project
-~/workspace/sbatch/check_run.sh ~/workspace/repfr/runs/<run_id>  # specific run
-```
+## Project-Side Examples
 
-Here `run_id` means the name of a directory under `~/workspace/repfr/runs/`, for example `20260403-094020-3328986`. Chunking does not change that: one submission still gets one run directory, even if it spans multiple Slurm array jobs.
+The [examples/project-scripts](examples/project-scripts) directory contains
+reference scripts that would normally live inside a research project:
 
-To get the newest run path explicitly:
+- `post_fit.sh`: sentinel script that merges per-unit outputs, removes stale
+  rendered notebooks, and submits the next notebook batch.
+- `post_model_fit.sh`: second-stage sentinel script that submits analysis
+  notebooks.
+- `merge_partials.py`: example merge logic for per-unit JSON outputs.
 
-```bash
-ls -td ~/workspace/repfr/runs/* | head -1
-```
+These examples are intentionally generic. Adapt them inside your own project
+before using them on CSD3.
 
-This shows the Slurm job ID and task counts by state. Use `-v` for per-task detail with notebook paths and corresponding `.err` log paths. Inspect `runs/<run_id>/logs/` for per-task stdout/stderr.
+## Implementation Style
 
-To list only failed tasks, including the failed notebook path and stderr path:
+Future edits should stay close to the current style:
 
-```bash
-cd ~/workspace/project
-../sbatch/check_run.sh -v | grep FAILED
-```
+- direct Bash and Markdown
+- explicit commands rather than hidden configuration
+- simple guards and clear error messages
+- concrete CSD3 examples
+- no new imports, frameworks, generators, config layers, or abstraction layers
 
-Inspect one failing stderr log before deciding whether the failures are transient:
-
-```bash
-../sbatch/check_run.sh -v | grep FAILED | awk '{print $4}' | head -1
-sed -n '1,200p' <stderr_path>
-```
-
-Generated project artifacts are typically synchronized back with `rsync`; Git remains the normal tool for source changes.
-
-At that point, the repo is working end-to-end:
-
-- notebooks already exist
-- the runner can submit them to Slurm
-- one notebook runs per task
-- logs are written under the project's `runs/` directory
-
-## Email Notifications
-
-To get emailed when jobs finish or fail, set `SBATCH_MAIL_USER` in your `~/.bashrc`:
-
-```bash
-echo 'export SBATCH_MAIL_USER="your_email@example.com"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-`submit_notebooks.sh` picks this up automatically. If unset, no emails are sent.
-
-You get one email when the entire batch finishes, plus immediate emails for any individual task failures.
-
-## Custom Sentinel Jobs
-
-By default, a lightweight sentinel job sends the completion email after the array finishes. To run a custom script instead (e.g. a post-processing pipeline), use `--sentinel`:
-
-```bash
-./submit_notebooks.sh --sentinel /path/to/post_process.sh /path/to/notebooks "fitting_*.ipynb"
-```
-
-The sentinel script receives the project directory as its first argument and runs only if all array tasks succeed (`afterok`). If omitted, the default email-only sentinel runs on `afterany`.
-
-## Resubmitting Failed Tasks
-
-If some tasks fail (e.g. transient kernel deaths), resubmit just the failures:
-
-```bash
-cd ~/workspace/project
-../sbatch/resubmit_failed.sh
-```
-
-This reads the newest run's manifest and sacct state by default, copies failed notebooks to `<run_dir>/resubmit/`, and submits them. Supports `--sentinel` for chaining post-processing:
-
-```bash
-cd ~/workspace/project
-../sbatch/resubmit_failed.sh --sentinel /path/to/post_process.sh
-```
-
-To resubmit failures from a specific run instead:
-
-```bash
-./resubmit_failed.sh --sentinel /path/to/post_process.sh ~/workspace/project/runs/<run_id>
-```
+When in doubt, keep the scripts boring and put explanation in the guide
+notes.

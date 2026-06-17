@@ -1,0 +1,56 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.md
+    - workshop/*.md
+
+website:
+  title: "Remote Cluster Computing For Research Workflows"
+  description: "A CSD3 guide for preparing, submitting, monitoring, and syncing research jobs"
+  repo-url: https://github.com/githubpsyche/sbatch
+  repo-actions: [edit, issue]
+
+  navbar:
+    background: dark
+    left:
+      - text: "Start"
+        href: index.md
+      - text: "Workflow"
+        href: workshop/03-workflow-map.md
+      - text: "Examples"
+        href: https://github.com/githubpsyche/sbatch/tree/master/examples
+    right:
+      - icon: github
+        href: https://github.com/githubpsyche/sbatch
+
+  sidebar:
+    contents:
+      - index.md
+      - workshop/00-orientation.md
+      - workshop/01-tools-and-access.md
+      - workshop/02-environment-setup.md
+      - workshop/03-workflow-map.md
+      - workshop/04-prepare-work-units.md
+      - workshop/05-transfer-files.md
+      - workshop/06-run-one-slurm-job.md
+      - workshop/07-submit-the-batch.md
+      - workshop/08-monitor-and-recover.md
+      - workshop/09-follow-up-jobs.md
+      - workshop/10-post-process-or-bring-results-back.md
+      - workshop/11-focused-reruns.md
+      - workshop/12-resources.md
+
+  search:
+    location: navbar
+    type: overlay
+
+format:
+  html:
+    theme: darkly
+    toc: true
+    toc-depth: 3
+    code-copy: true
+
+execute:
+  enabled: false

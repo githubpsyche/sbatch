@@ -1,0 +1,133 @@
+# Prepare Work Units
+
+Before using Slurm, make the repeated work explicit. A work unit is the thing
+one scheduled job should run: one subject, one input file, one simulation seed,
+one parameter setting, or one report.
+
+This page is about preparing those units. It does not submit anything to Slurm.
+
+## Two Ways To Represent The Batch
+
+Before submission, the full batch needs to be explicit: what units exist, and
+how one scheduled task identifies the unit it should run.
+
+One common pattern is a single parametrizable runner plus a manifest:
+
+```text
+scripts/run_one_unit.py
+jobs/manifest.txt
+```
+
+The runner knows how to process one unit. The manifest lists every unit in the
+batch. Later, each Slurm array task reads one manifest row.
+
+Another pattern is one concrete file per unit:
+
+```text
+analyses/rendered/fitting_example_unit0.ipynb
+analyses/rendered/fitting_example_unit1.ipynb
+analyses/rendered/fitting_example_unit2.ipynb
+```
+
+That concrete-file pattern is heavier, but it can be useful for notebook
+workflows because each generated notebook is inspectable and can be resubmitted
+directly.
+
+This repo's notebook helper uses both ideas. It submits one rendered notebook
+per work unit, and `submit_notebooks.sh` builds a manifest of those notebook
+paths so each Slurm array task runs one file.
+
+## What A Prepared Unit Should Contain
+
+A prepared unit should make these choices explicit:
+
+- which unit it runs
+- which data or parameter files it reads
+- where generated outputs are written
+- which project code it imports or calls
+- whether it can run without prompts, clicks, or manual edits
+
+The exact representation can differ. The useful habit is to make the batch
+explicit enough that a later submission command can select the right subset.
+
+## Notebook Helper Pattern
+
+The main example uses prepared notebooks. The pattern is:
+
+```text
+maintained notebook
+  -> render concrete work units
+  -> analyses/rendered/fitting_example_unit0.ipynb
+  -> analyses/rendered/fitting_example_unit1.ipynb
+  -> analyses/rendered/fitting_example_unit2.ipynb
+```
+
+The rendered notebooks are the files that get transferred to CSD3 and submitted
+later. Each rendered notebook should already know which unit it is responsible
+for and where its outputs should go.
+
+## Maintained And Rendered Notebooks
+
+For a notebook workflow, keep this distinction clear:
+
+`template/source notebook`: the notebook you maintain by hand. It contains the
+code for the task and, if needed, parameters that can be filled in for one unit.
+
+`rendered notebook`: a concrete generated notebook for one work unit, written to
+a directory such as `analyses/rendered/`.
+
+Some projects keep separate source and template notebooks. Others use one
+maintained notebook as both the source and the template. The important
+distinction is between the maintained notebook you edit and the rendered
+notebooks you submit to CSD3.
+
+## Generate The Prepared Work Units
+
+In the notebook-helper pattern, preparation turns one maintained notebook into
+many concrete notebooks, one per work unit. This is where the full batch becomes
+visible before anything is submitted to Slurm.
+
+Papermill can execute notebooks from the command line and can also be used by a
+project-specific renderer to create prepared notebooks.
+
+Many projects use a flag such as `prepare_only=True` for this step: create the
+rendered notebooks, but do not run the expensive computation yet.
+
+One generic rendering command might look like:
+
+```bash
+cd "$HOME/workspace/my_project"
+papermill analyses/render_work_units.ipynb \
+  analyses/render_work_units.ipynb \
+  --progress-bar
+```
+
+The important output is the prepared set:
+
+```bash
+find analyses/rendered -maxdepth 1 -type f -name "*.ipynb" | sort | head
+find analyses/rendered -maxdepth 1 -type f -name "*.ipynb" | wc -l
+```
+
+For rendered notebooks, the unit identity often appears in the filename:
+
+```text
+analyses/rendered/fitting_example_unit0.ipynb
+analyses/rendered/fitting_example_unit1.ipynb
+analyses/rendered/analysis_example.ipynb
+```
+
+## Other Workflows
+
+For R, MATLAB, shell, or compiled workflows, the prepared unit may not be a
+notebook. These workflows often use the parametrizable runner plus manifest
+pattern:
+
+- one row in a manifest
+- one parameter file
+- one shell script plus arguments
+- one command that takes an input path and output path
+
+The same rule still applies: prepare a batch of explicit units first. Later
+pages replace "rendered notebook" with your prepared script, manifest row, or
+input file.

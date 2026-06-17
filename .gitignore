@@ -1,2 +1,5 @@
 runs/
 .DS_Store
+
+/.quarto/
+**/*.quarto_ipynb

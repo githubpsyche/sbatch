@@ -1,0 +1,103 @@
+# Submit The Batch
+
+After one scheduled job works, submit the full prepared set.
+
+In the notebook-helper workflow, the batch is:
+
+```text
+one directory of prepared notebooks
+one filename pattern selecting the notebooks to run
+one Slurm array with one task per notebook
+```
+
+## CSD3: Submit Prepared Notebooks
+
+```bash
+cd "$HOME/workspace/sbatch"
+
+./submit_notebooks.sh \
+  "$HOME/workspace/my_project/analyses/rendered" \
+  "fitting_*_unit*.ipynb"
+```
+
+To limit how many tasks run at the same time, pass a throttle:
+
+```bash
+cd "$HOME/workspace/sbatch"
+
+./submit_notebooks.sh \
+  "$HOME/workspace/my_project/analyses/rendered" \
+  "fitting_*_unit*.ipynb" \
+  50
+```
+
+The throttle does not change how many units are submitted. It only limits
+concurrent running tasks.
+
+## What The Helper Creates
+
+`submit_notebooks.sh` does several things:
+
+- finds matching notebooks in the prepared directory
+- writes a run directory under the project, such as `runs/<run_id>/`
+- writes `manifest.txt`, one notebook path per line
+- submits a Slurm array using `run_notebook.sbatch`
+- writes stdout and stderr logs under `runs/<run_id>/logs/`
+- records Slurm submission output in `submission.txt`
+
+Inspect the newest run:
+
+```bash
+cd "$HOME/workspace/my_project"
+RUN_DIR="$(ls -td runs/* | head -1)"
+
+printf '%s\n' "$RUN_DIR"
+sed -n '1,20p' "$RUN_DIR/manifest.txt"
+cat "$RUN_DIR/submission.txt"
+find "$RUN_DIR/logs" -maxdepth 1 -type f | sort | head
+```
+
+## What A Slurm Array Adds
+
+A Slurm array repeats the same job script many times. Each task gets a task
+index.
+
+In this repo, the helper passes a manifest to `run_notebook.sbatch`. Each array
+task uses its task index to choose one line from the manifest.
+
+```text
+task 0 -> manifest line 1 -> first notebook
+task 1 -> manifest line 2 -> second notebook
+task 2 -> manifest line 3 -> third notebook
+```
+
+The array job is the scheduler mechanism. The manifest is the list of prepared
+work units.
+
+CSD3's official batch-job examples include
+[sample submission scripts](https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html#sample-submission-scripts)
+and [array jobs](https://docs.hpc.cam.ac.uk/hpc/user-guide/batch.html#array-jobs).
+
+## Log Names
+
+Array logs include both the array job ID and the task index:
+
+```text
+runs/<run_id>/logs/nb_<array_job_id>_<task_id>.out
+runs/<run_id>/logs/nb_<array_job_id>_<task_id>.err
+```
+
+That is how one failed task can be traced back to one prepared notebook.
+
+## Adaptation Notes
+
+For non-notebook workflows, the same batch structure still applies:
+
+- write a manifest with one unit per line
+- submit a Slurm array
+- use `SLURM_ARRAY_TASK_ID` to select one line
+- write one log pair per task
+
+The difference is the runner. Instead of `run_notebook.sbatch`, your project may
+use an `sbatch` script that calls `Rscript`, `matlab`, a shell pipeline, or a
+compiled executable.

@@ -1,0 +1,176 @@
+# Post-Process Or Bring Results Back
+
+After a batch finishes, decide where the next step should run.
+
+If the next step is still compute-heavy, depends on large remote files, or
+produces reduced summaries from many outputs, run it on CSD3. If the next step
+is local inspection, writing, plotting, or comparison against local materials,
+bring back the files you need with `rsync`.
+
+Generated outputs normally move with `rsync`, not Git.
+
+## Choose Where The Next Step Runs
+
+Keep post-processing on CSD3 when it reads many generated files, writes large
+intermediates, or would take a long time on your local machine.
+
+Bring outputs back when the remaining work is lightweight, visual, interactive,
+or easier to do with local files.
+
+The common pattern is:
+
+```text
+large batch on CSD3
+  -> optional summary or reduction on CSD3
+  -> filtered results copied back with rsync
+  -> local inspection, figures, reports, or comparisons
+```
+
+## CSD3: Post-Process Near The Data
+
+For a short post-processing step, run the command in a CSD3 terminal:
+
+```bash
+cd "$HOME/workspace/my_project"
+source "$HOME/workspace/cluster_env.sh"
+
+RUN_TAG="experiment_001"
+python scripts/summarize_outputs.py --run-tag "$RUN_TAG"
+```
+
+If the post-processing step is long, submit it as another Slurm job:
+
+```bash
+cd "$HOME/workspace/my_project"
+mkdir -p runs
+
+sbatch \
+  --job-name=summarize \
+  --output "$HOME/workspace/my_project/runs/summarize_%j.out" \
+  --error "$HOME/workspace/my_project/runs/summarize_%j.err" \
+  --wrap "source $HOME/workspace/cluster_env.sh && cd $HOME/workspace/my_project && python scripts/summarize_outputs.py --run-tag experiment_001"
+```
+
+For notebook workflows, post-processing may be another prepared analysis
+notebook submitted through the same helper:
+
+```bash
+cd "$HOME/workspace/sbatch"
+
+./submit_notebooks.sh \
+  "$HOME/workspace/my_project/analyses/rendered" \
+  "analysis_*.ipynb"
+```
+
+If the post-processing should wait for an earlier batch, use the follow-up job
+pattern from [Run Follow-Up Jobs](09-follow-up-jobs.md).
+
+## Choose A Filter
+
+Use a run tag or filename pattern when you only want one batch:
+
+```bash
+RUN_TAG="experiment_001"
+```
+
+Common generated folders include:
+
+```text
+outputs/
+fits/
+figures/
+reports/
+analyses/rendered/
+runs/
+```
+
+The exact folders depend on your project. The important decision is which
+generated files are needed for the next local step.
+
+## Local Machine: Open One SSH Connection For Transfers
+
+```bash
+cd "$HOME/workspace/my_project"
+CLUSTER="<your-crsid-or-username>@login-cpu.hpc.cam.ac.uk"
+SOCK="$HOME/.ssh/csd3-rsync-sock"
+
+rm -f "$SOCK"
+ssh -M -S "$SOCK" -fN "$CLUSTER"
+```
+
+The control socket lets repeated `rsync` commands reuse one SSH connection.
+
+## Local Machine: Retrieve Generated Outputs
+
+Copy only the outputs you need locally:
+
+```bash
+rsync -av --progress --rsh="ssh -S $SOCK" --prune-empty-dirs \
+  --include='*/' \
+  --include="*${RUN_TAG}*" \
+  --exclude='*' \
+  "${CLUSTER}:~/workspace/my_project/outputs/" outputs/
+```
+
+Retrieve figures or reports the same way:
+
+```bash
+rsync -av --progress --rsh="ssh -S $SOCK" --prune-empty-dirs \
+  --include='*/' \
+  --include="*${RUN_TAG}*" \
+  --exclude='*' \
+  "${CLUSTER}:~/workspace/my_project/figures/" figures/
+```
+
+For notebook workflows, you may also want executed notebooks:
+
+```bash
+rsync -av --progress --rsh="ssh -S $SOCK" --prune-empty-dirs \
+  --include='*/' \
+  --include="*${RUN_TAG}*.ipynb" \
+  --include='analysis_*.ipynb' \
+  --exclude='*' \
+  "${CLUSTER}:~/workspace/my_project/analyses/rendered/" analyses/rendered/
+```
+
+If CSD3 post-processing produced smaller summaries, copy those instead of the
+full raw output set:
+
+```bash
+rsync -av --progress --rsh="ssh -S $SOCK" --prune-empty-dirs \
+  --include='*/' \
+  --include="*${RUN_TAG}*" \
+  --exclude='*' \
+  "${CLUSTER}:~/workspace/my_project/reports/" reports/
+```
+
+Close the control socket:
+
+```bash
+ssh -S "$SOCK" -O exit "$CLUSTER"
+```
+
+## Local Machine: Inspect And Summarize
+
+After generated files are local, run the local checks or summaries for your
+project. Keep this step for work that is genuinely easier or more useful on the
+local machine:
+
+```bash
+cd "$HOME/workspace/my_project"
+find outputs -type f | head
+bash scripts/check_outputs.sh
+```
+
+For a notebook workflow, a local comparison or report notebook might be rerun
+after the cluster outputs are back:
+
+```bash
+papermill analyses/render_summary.ipynb analyses/render_summary.ipynb --progress-bar
+```
+
+If nothing copies, inspect the run tag and include patterns first. Filtered
+`rsync` commands only copy files that match the include rules.
+
+Do not copy every temporary file by default. Bring back the generated files that
+support inspection, summaries, figures, reports, or the next local comparison.
